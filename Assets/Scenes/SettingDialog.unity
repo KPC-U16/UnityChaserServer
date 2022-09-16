@@ -135,6 +135,7 @@ GameObject:
   - component: {fileID: 10208064}
   - component: {fileID: 10208063}
   - component: {fileID: 10208062}
+  - component: {fileID: 10208065}
   m_Layer: 5
   m_Name: MapPick
   m_TagString: Untagged
@@ -206,7 +207,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 10208063}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 10208065}
+        m_TargetAssemblyTypeName: MapPick, Assembly-CSharp
+        m_MethodName: OnClick
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &10208063
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -245,6 +258,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 10208060}
   m_CullTransparentMesh: 1
+--- !u!114 &10208065
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 10208060}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7fac4f473c24d7a43882218b48a8d3dd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  inputField: {fileID: 1999250075}
 --- !u!1 &71378585
 GameObject:
   m_ObjectHideFlags: 0
@@ -8210,7 +8236,7 @@ MonoBehaviour:
     m_PressedTrigger: Pressed
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
-  m_Interactable: 0
+  m_Interactable: 1
   m_TargetGraphic: {fileID: 1999250076}
   m_TextComponent: {fileID: 1293442733}
   m_Placeholder: {fileID: 1911157220}
@@ -8237,7 +8263,7 @@ MonoBehaviour:
   m_Text: 
   m_CaretBlinkRate: 0.85
   m_CaretWidth: 1
-  m_ReadOnly: 0
+  m_ReadOnly: 1
   m_ShouldActivateOnSelect: 1
 --- !u!114 &1999250076
 MonoBehaviour:
