@@ -1,18 +1,15 @@
 using System.IO;
 
-public class MapManager
+public class ChaserMap
 {
-    private string mapData; //mapDataのバッファ
-    private string[] arrayBuf; //mapDataのバッファをsplitした時のバッファー
-    private int[] mapColumnBuf; //mapの列のバッファ
-    private string name; //mapの名前
-    private int turn; //turn数
-    private int[] size; //mapのサイズ
-    private int[,] map; //mapの実態(0:何もない, 2:壁, 3:アイテム)
-    private int[] hotPosition; //hotの位置
-    private int[] coolPosition; //coolの位置
+    public string name; //mapの名前
+    public int turn; //turn数
+    public int[] size; //mapのサイズ
+    public int[,] map; //mapの実態(0:何もない, 2:壁, 3:アイテム)
+    public int[] hotPosition; //hotの位置
+    public int[] coolPosition; //coolの位置
 
-    public MapManager(string path) //コンストラクタ
+    public ChaserMap(string path) //コンストラクタ
     {
         try
         {
@@ -31,8 +28,10 @@ public class MapManager
     }
 
     //ここから このクラス内でのみ使われるメソッド
-    private void CreateMap(string mapData)//mapDataをもとに変数に値を代入する 
+    private void CreateMap(string mapData) //mapDataをもとに変数に値を代入する  //mapDataのバッファ
     {
+        string[] arrayBuf; //mapDataのバッファをsplitした時のバッファー
+        int[] mapColumnBuf; //mapの列のバッファ
         this.arrayBuf = mapData.Split(':');
         switch(this.arrayBuf[0])
         {
@@ -63,16 +62,5 @@ public class MapManager
                 break;
 
         }
-    }
-
-    //ここから 各種ゲッター,セッター
-    public int[] getSize() //クラス変数のsizeのゲッター
-    {
-        return this.size;
-    }
-
-    public int[] getCharPosition() //クラス変数のhotPositionとcoolPositionを包括して一つのゲッターにした
-    {
-        return this.hotPosition, this.coolPosition;
     }
 }
