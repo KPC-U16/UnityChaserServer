@@ -9,7 +9,7 @@ public class ChaserMap
     public int[] hotPosition; //hotの位置
     public int[] coolPosition; //coolの位置
 
-    public ChaserMap(string path) //コンストラクタ
+    public ChaserMap(string path) //ファイルを読み込むときのコンストラクタ
     {
         try
         {
@@ -25,6 +25,14 @@ public class ChaserMap
         {
             print("file read erro") //仮置きのエラー文
         }
+    }
+
+    public ChaserMap(string name, int turn, int[] size) //ファイルを読み込まないときのコンストラクタ
+    {
+        this.name = name;
+        this.turn = turn;
+        this.size = size;
+        this.map = new int[this.size[1], this.size[0]];
     }
 
     //ここから このクラス内でのみ使われるメソッド
