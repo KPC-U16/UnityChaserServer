@@ -12,6 +12,7 @@ public class ClientControl
 {
     
     SocketControl client;
+    public string name;
 
     public ClientControl(int Port){
         
@@ -22,10 +23,10 @@ public class ClientControl
 /// <summary>
 /// クライアントにサーバーの準備が完了したことを通知する
 /// </summary>
-/// <returns>Clientの名前<string></returns>
-    public async Task<string> Ready(){
+/// <returns></returns>
+    public async Task Ready(){
         await client.StartListening();
-        return await client.ReceptionAsync();
+        this.name = await client.ReceptionAsync();
     }
 
 /// <summary>
