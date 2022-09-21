@@ -40,12 +40,12 @@ public class ClientControl
     public async Task<string> Send(int[,] arround){
         
         if (continueCommunication){
-            await client.SendAsync("@");
+            await client.SendAsync("@\r\n");
             if (await client.ReceptionAsync() != "gr\r\n"){
                 //ClientからGetReadyを受信できなかったとき
                 throw new ClientMessageFormatException("GetReadyを正常に受信できませんでした");
             }
-            await client.SendAsync(string.Join(",",arround));
+            await client.SendAsync(string.Join(",",arround)+"\r\n");
             string res = await client.ReceptionAsync();
             
             //フラグ反転
@@ -54,7 +54,7 @@ public class ClientControl
         }
         //行動命令結果を返答する
         else{
-            await client.SendAsync(string.Join(",",arround));
+            await client.SendAsync(string.Join(",",arround)+"\r\n");
             
             //フラグ反転
             continueCommunication =! continueCommunication;
