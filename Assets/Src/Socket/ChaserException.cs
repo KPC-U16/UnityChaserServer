@@ -17,16 +17,18 @@ public class ChaserException : System.Exception
         : base(message)
     {
     }
+
     public ChaserException(string message, Exception innerException)
         : base(message, innerException)
     {
     }
+
     protected ChaserException(SerializationInfo info, StreamingContext context)
-    : base(info, context)
-{
+        : base(info, context)
+    {
+    }
 }
 
-}
 
 /// <summary>
 /// Clientの不適切なメッセージフォーマットによる例外
@@ -50,7 +52,7 @@ public class ClientMessageFormatException : ChaserException
     }
 
     protected ClientMessageFormatException(SerializationInfo info, StreamingContext context)
-    : base(info, context)
+        : base(info, context)
     {
     }
 }
