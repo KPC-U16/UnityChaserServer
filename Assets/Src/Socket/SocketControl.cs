@@ -114,14 +114,8 @@ public async Task<string>  ReceptionAsync(){
                 throw new NetworkErrorException("不明なネットワークエラーが発生しました",e);
             }
 
-            try{
-                request += Encoding.UTF8.GetString(buffer, 0, await byteSize);
-            }
-            //UTF8にエンコードできないとき
-            catch(ArgumentException){
-                throw new ClientMessageFormatException("クライアントのメッセージフォーマットが不正です");
-            }
-
+            request += Encoding.UTF8.GetString(buffer, 0, await byteSize);
+            
         }
         while(stream.DataAvailable);
         

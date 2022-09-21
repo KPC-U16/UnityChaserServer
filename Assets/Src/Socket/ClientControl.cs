@@ -11,11 +11,7 @@ using System.Threading.Tasks;
 public class ClientControl
 {
     
-    //
     SocketControl client;
-
-    //クライアントから行動命令をサーバーが処理中か
-    bool continueCommunication = false;
 
     public ClientControl(int Port){
         
@@ -33,33 +29,13 @@ public class ClientControl
     }
 
 /// <summary>
-/// クライアントへ周囲情報を送信する
+/// クライアントへ周囲情報,制御情報を送信する
 /// </summary>
-/// <param name="arround"></param>
-/// <returns>クライアントからの行動指示 or ""</returns>
-    public async Task<string> Send(int[,] arround){
-        
-        if (continueCommunication){
-            await client.SendAsync("@\r\n");
-            if (await client.ReceptionAsync() != "gr\r\n"){
-                //ClientからGetReadyを受信できなかったとき
-                throw new ClientMessageFormatException("GetReadyを正常に受信できませんでした");
-            }
-            await client.SendAsync(string.Join(",",arround)+"\r\n");
-            string res = await client.ReceptionAsync();
-            
-            //フラグ反転
-            continueCommunication =! continueCommunication;
-            return res;
-        }
-        //行動命令結果を返答する
-        else{
-            await client.SendAsync(string.Join(",",arround)+"\r\n");
-            
-            //フラグ反転
-            continueCommunication =! continueCommunication;
-            return "";
-        }
+/// <param name="instruction"></param>
+/// <returns>クライアントからの行動指示 or # (ターンの終了) </returns>
+    public async Task<string> Send(string instruction){
+        await client.SendAsync(instruction+"\r\n");
+        return await client.ReceptionAsync();
     }
 
 /// <summary>
