@@ -41,15 +41,30 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
         Debug.Log(port);
         switch (team)
         {
-            case "cool":
+            case "Cool":
                 cool = new ClientControl(int.Parse(port));
                 await cool.Ready();
-                Debug.Log(cool.name);
             break;
-            case "hot":
+            case "Hot":
                 hot = new ClientControl(int.Parse(port));
                 await hot.Ready();
             break;
         }
+    }
+
+    public void ConClose(string team)
+    {
+        switch (team)
+        {
+            case "Cool":
+                cool.End();
+                cool = null;
+            break;
+            case "Hot":
+                hot.End();
+                hot = null;
+            break;
+        }
+        
     }
 }

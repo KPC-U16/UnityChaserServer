@@ -42,6 +42,7 @@ public class ConnectButton : MonoBehaviour
 
             inputPort.interactable = true;
             selectUser.interactable = true;
+            gameManager.ConClose(team);
         }
         else if (!clicked)
         {
