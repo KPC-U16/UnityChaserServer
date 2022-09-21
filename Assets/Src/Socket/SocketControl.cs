@@ -1,9 +1,4 @@
 using System.IO;
-using System.Globalization;
-using System.Net.Security;
-using System.Threading;
-using System.Collections;
-using System.Collections.Generic;
 using System;
 using System.Net.Sockets;
 using System.Net;
@@ -77,46 +72,46 @@ public class SocketControl
 /// 非同期でクライアントから受信したバイナリをUTF8で文字列へ変換する
 /// </summary>
 /// <returns></returns>
-public async Task<string>  ReceptionAsync(){
-    byte[] buffer = new byte[1024];
-    string request = "";
-    Task<int> byteSize;
+    public async Task<string>  ReceptionAsync(){
+        byte[] buffer = new byte[1024];
+        string request = "";
+        Task<int> byteSize;
 
-    // クライアントからリクエストを受信する
-    using(NetworkStream stream = this.Server.GetStream()){
-    do{
-        byteSize = stream.ReadAsync(buffer,0,buffer.Length);
+        // クライアントからリクエストを受信する
+        using(NetworkStream stream = this.Server.GetStream()){
+        do{
+            byteSize = stream.ReadAsync(buffer,0,buffer.Length);
         
-        try{
-            if (await Task.WhenAny(byteSize, Task.Delay(SOCKET_TIMEOUT)) != byteSize)
-                // SOCKET_TIMEOUT ミリ秒待って読み取りが終了しなかったら、タイムアウトにする
-                throw new SocketException(10060);
-        }
-        //ソケット通信にエラーが発生したとき
-        catch(SocketException e){
-            if(e.ErrorCode == 10060){
-                throw new NetworkErrorException("通信がタイムアウトしました");
+            try{
+                if (await Task.WhenAny(byteSize, Task.Delay(SOCKET_TIMEOUT)) != byteSize)
+                    // SOCKET_TIMEOUT ミリ秒待って読み取りが終了しなかったら、タイムアウトにする
+                    throw new SocketException(10060);
             }
-            else{
-                throw new NetworkErrorException("ソケット通信にエラーが発生しました",e);
+            //ソケット通信にエラーが発生したとき
+            catch(SocketException e){
+                if(e.ErrorCode == 10060){
+                    throw new NetworkErrorException("通信がタイムアウトしました");
+                }
+                else{
+                    throw new NetworkErrorException("ソケット通信にエラーが発生しました",e);
+                }
             }
-        }
-        //ソケットにアクセスできないとき
-        catch(IOException e){
-            throw new NetworkErrorException("ソケットにアクセスできません",e);
-        }
-        //想定しないエラーの場合
-        catch(Exception e){
-            throw new NetworkErrorException("不明なネットワークエラーが発生しました",e);
-        }
+            //ソケットにアクセスできないとき
+            catch(IOException e){
+                throw new NetworkErrorException("ソケットにアクセスできません",e);
+            }
+            //想定しないエラーの場合
+            catch(Exception e){
+                throw new NetworkErrorException("不明なネットワークエラーが発生しました",e);
+            }
 
-        request += Encoding.UTF8.GetString(buffer, 0, await byteSize);
+            request += Encoding.UTF8.GetString(buffer, 0, await byteSize);
         
+            }
+        while(stream.DataAvailable);
         }
-    while(stream.DataAvailable);
+        return request;
     }
-    return request;
-}
 
 
 /// <summary>
