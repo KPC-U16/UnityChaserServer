@@ -7,19 +7,16 @@ public class ChaserMap
 {
     public string name; //mapの名前
     public int turn; //turn数
-    public int[] size; //mapのサイズ
+    public int[] size = new int[2]{0,0}; //mapのサイズ
     public int[,] data; //mapの実態(0:何もない, 2:壁, 3:アイテム)
-    public int[] hotPosition; //hotの位置
-    public int[] coolPosition; //coolの位置
+    public int[] hotPosition = new int[2]{0,0}; //hotの位置
+    public int[] coolPosition = new int [2]{0,0}; //coolの位置
 
     public ChaserMap() //コンストラクタ すべてにnullを入れる
     {
         this.name = null;
         this.turn = 0;
-        this.size = null;
         this.data = null;
-        this.hotPosition = null;
-        this.coolPosition = null;
     }
 
     public async Task<string> setMap(string path) //.mapファイルからmapクラスに展開する
