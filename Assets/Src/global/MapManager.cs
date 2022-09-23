@@ -10,13 +10,13 @@ public class MapManager
         map.setMap(path);
     }
 
-    public void setCustomMap(string path, int[] size)
+    public void setCustomMap(string path, int[] size) //マップ編集時に呼び出される
     {
-        if(path)
+        if(path) //引数にpathを渡されたら.mapファイルを開いて展開する
         {
             setMap(path);
         }
-        else
+        else //pathが渡されなかった場合sizeをもとにランダムマップを生成する
         {
             this.setRandomMap(size);
         }
