@@ -55,4 +55,17 @@ public class ConnectButton : MonoBehaviour
         }
         clicked = !clicked;
     }
+
+    public void InitButton()
+    {
+        clicked = false;
+        Image buttonImage = gameObject.GetComponent<Image>();
+        Text buttonText = gameObject.GetComponentInChildren<Text>();
+
+        buttonImage.color = Color.white;
+        buttonText.text = "接続開始";
+
+        inputPort.interactable = true;
+        selectUser.interactable = true;
+    }
 }

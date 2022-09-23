@@ -185,20 +185,7 @@ public class SocketControl
     /// <returns></returns>
     public bool IsConnected()
     {
-        //一番最後の状態がConnectならtrueなので
-        if (Server.Client.Connected == false)
-        {
-            return false;
-        }
-
-        if (Server.Client.Poll(1000, SelectMode.SelectWrite))
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
+        return !(this.Server.Client.Poll(1000,SelectMode.SelectRead) && this.Server.Client.Available == 0 || !this.Server.Connected);
     }
     /// <summary>
     /// TCPソケット通信を終了する
