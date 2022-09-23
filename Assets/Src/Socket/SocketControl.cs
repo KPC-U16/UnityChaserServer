@@ -1,3 +1,5 @@
+using System.Threading;
+using System.Net.Security;
 using System.IO;
 using System;
 using System.Net.Sockets;
@@ -14,10 +16,10 @@ public class SocketControl
 {
 
     TcpListener Listener;
+    Task<TcpClient> ListenerTask;
+    CancellationTokenSource cancellation = new CancellationTokenSource();
 
     TcpClient Server;
-
-    const int SOCKET_TIMEOUT = 10000;
 
     public SocketControl(int port){        
         // 接続を待つエンドポイントを設定
@@ -35,7 +37,7 @@ public class SocketControl
 /// </summary>
 /// <param name="request"></param>
 /// <returns></returns>
-    public async Task SendAsync(string request){
+    public async Task SendAsync(string request,int SOCKET_TIMEOUT = 10000){
         byte[] buffer = new byte[1024];
         buffer = Encoding.UTF8.GetBytes(request);
 
@@ -72,7 +74,7 @@ public class SocketControl
 /// 非同期でクライアントから受信したバイナリをUTF8で文字列へ変換する
 /// </summary>
 /// <returns></returns>
-    public async Task<string>  ReceptionAsync(){
+    public async Task<string>  ReceptionAsync(int SOCKET_TIMEOUT = 10000){
         byte[] buffer = new byte[1024];
         string request = "";
         Task<int> byteSize;
@@ -118,25 +120,63 @@ public class SocketControl
 /// クライアントからの接続を受け付け、承認する
 /// </summary>
 /// <returns></returns>
-    public async Task StartListening() {
+    public async Task<bool> StartListening() {
         try{
             // 待ち受け開始
             this.Listener.Start();
             // 非同期で接続要求を待機
-            this.Server = await this.Listener.AcceptTcpClientAsync();
+
+            //this.Server = await Task.Run(()=> this.Listener.AcceptTcpClientAsync(),cancellation.Token);
+            this.Server = await Task.Run(() => this.Listener.AcceptTcpClientAsync(),cancellation.Token);
+            
+            this.Listener.Stop();
+            return true;
         }
         //ソケットにエラーが発生したとき
         catch(SocketException e)
         {
             throw new NetworkErrorException("ソケット通信の確立中にエラーが発生しました",e);
         }
+        catch(ObjectDisposedException){
+            return false;
+        }
     }
 
+/// <summary>
+/// RemoteEndPointからIPを取り出し、返答する
+/// </summary>
+/// <returns></returns>
+    public string GetRemoteIP(){
+        string remoteAddress = this.Server.Client.RemoteEndPoint.ToString();
+        return remoteAddress.Split(":")[0];
+    }
 
+/// <summary>
+/// クライアントにポーリングして接続状態を確認する
+/// </summary>
+/// <returns></returns>
+    public bool IsConnected()
+    {
+        //一番最後の状態がConnectならtrueなので
+        if (Server.Client.Connected == false){
+        return false;
+        }
+
+        if (Server.Client.Poll(1000,SelectMode.SelectWrite)) {
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
 /// <summary>
 /// TCPソケット通信を終了する
 /// </summary>
     public void Close() {
-        Server.Close();
+        this.cancellation.Cancel();
+        this.Listener.Stop();
+        if ( this.Server != null && this.Server.Client.Connected == true) {
+            this.Server.Close();
+        }
     }
 }
