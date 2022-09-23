@@ -129,7 +129,7 @@ public class SocketControl
             //this.Server = await Task.Run(()=> this.Listener.AcceptTcpClientAsync(),cancellation.Token);
             this.Server = await Task.Run(() => this.Listener.AcceptTcpClientAsync(),cancellation.Token);
             
-            this.Listener.Stop();
+            //this.Listener.Stop();
             return true;
         }
         //ソケットにエラーが発生したとき
