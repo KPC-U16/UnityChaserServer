@@ -3,9 +3,23 @@ using System;
 public class MapManager
 {
     ChaserMap map = new ChaserMap(); //mapにChaserMap型をnewしてインスタンスを作る
+    int hotScorei = 0; //ホットのスコアを持つ
+    int coolScore = 0; //クールのスコアを持つ
+    string[,] difference; //mapの直近のデータを持つ
+    bool isContinue = true; //ゲームの継続判定
+    /*
+    mapの数字の解説
+    0:通路
+    2:壁
+    3:アイテム
+    4:cool
+    5:hot
+    6:壁に埋まったcool
+    7:壁に埋まったhot
+    */
 
     //mapのset系
-    public void setMap(string path)
+    public void setMap(string path) //mapファイルを用いてmapを生成するメソッド
     {
         map.setMap(path);
     }
@@ -14,7 +28,7 @@ public class MapManager
     {
         if(path) //引数にpathを渡されたら.mapファイルを開いて展開する
         {
-            setMap(path);
+            map.setMap(path);
         }
         else //pathが渡されなかった場合sizeをもとにランダムマップを生成する
         {
@@ -22,24 +36,245 @@ public class MapManager
         }
     }
 
-    public void setRandomMap(int[] size)
+    public void setRandomMap(int[] size) //ランダムにmapを生成する
     {
-        if(!size)
+        if(!size) //sizeの値が与えられなかった場合
         {
-            Array.Copy([15,17], size, 2);
+            Array.Copy([15,17], size, 2); //デフォルト値として15×17マップを用いる
         }
         Array.Copy(size, map.size, 2);
         map.data = new int[size[1], size[0]];
 
     }
 
-    public int[,] getMapData()
+    //ゲッター系
+
+    public int[,] getMapData() //mapのデータを返す
     {
-        return map.data;
+        int[,] returnData = map.data.Clone() as int[,];
+        returnData[map.coolPosition[1], map.coolPosition[0]] = 4; //mapデータのcoolの位置を4に置き換える
+        returnData[map.hotPosition[1], map.hotPosition[0]] = 5; //mapデータのhotの位置を5に置き換える
+        return returnData; //coolを4,hotを5にしたmapデータを送る
     }
 
-    public int[] getTurn()
+    public int[] getTurn() //ゲーム進行中のmapの残りターン数を返す
     {
         return map.turn;
+    }
+
+    public int getItem() //ゲーム進行中のmapのアイテムの総数を返す
+    {
+        return map.getItem();
+    }
+
+    public int[] ActChar(string character, string command) //キャラクターを行動によってそれぞれのメソッドを呼ぶメソッド
+    {
+        int[] values = new int[10]{0,0,0,0,0,0,0,0,0,0}; //デフォルトとしてゲームが継続できないときの情報で初期化する
+
+        if(!isContinue) return values; //相手が壁にはまっていたらゲーム終了
+
+        if(command.StartsWith("w")) //walkの時のメソッドを呼ぶ
+        {
+            values = this.WalkChar(character, command.Substring(1,1));
+        }
+        else if(command.StartsWith("l")) //lookの時のメソッドを呼ぶ
+        {
+            values = this.LookChar(character, command.Substring(1,1));
+        }
+        else if(command.StartsWith("s")) //searchの時のメソッドを呼ぶ
+        {
+            values = this.SearchChar(character, command.Substring(1,1));
+        }
+        else if(command.StartsWith("p")) //putの時のメソッドを呼ぶ
+        {
+            values = this.PutChar(character, command.Substring(1,1));
+        }
+        else //上記以外はgetReady
+        {
+            //char(X,Y)に位置を代入する
+            if(character.Equals("Cool"))
+            {
+                charX = map.coolPosition[1];
+                charY = map.coolPosition[0];
+            }
+            else if(character.Equals("Cool"))
+            {
+                charX = map.hotPosition[1];
+                charY = map.hotPosition[0];
+            }
+
+            values = AroundChar(charX, charY); //xとyの周辺情報を返す
+        }
+        return values;
+    }
+
+    private int[] AroundChar(int charX, int charY) //与えられた座標の周辺情報の取得
+    {
+        int[] values = new int[10]{1,0,0,0,0,0,0,0,0,0}; //デフォルトとしてゲームが継続できないときの情報で初期化する
+        int n = 0; //2重for文の回った回数(valuesの番地)
+
+        for(int i = -1; i < 2; i++)
+        {
+            for(int j = -1; j < 2; j++)
+            {
+                n++;
+                if(charX + i == -1 || charX + i == map.size[1] || charY + j == -1 || charY + j == map.size[0]) //マップの範囲外を見たとき
+                {
+                    values[n - 1] = 0; //0を代入
+                }
+                else
+                {
+                    values[n - 1] = map.data[charX + i, charY + j]; //valuesにデータを代入
+                }
+            }
+        }
+        return values;
+    }
+
+    private int[] WalkChar(string character, string direction) //walkの時のメソッド
+    {
+        int[] values = new int[10]{0,0,0,0,0,0,0,0,0,0}; //デフォルトとしてゲームが継続できないときの情報で初期化する
+        int charX;
+        int charY;
+        int charNum;
+        bool score;
+
+        //char(X,Y)に位置を代入する
+        if(character.Equals("Cool"))
+        {
+            charX = map.coolPosition[1];
+            charY = map.coolPosition[0];
+            charNum = 4;
+        }
+        else if(character.Equals("Cool"))
+        {
+            charX = map.hotPosition[1];
+            charY = map.hotPosition[0];
+            charNum = 5;
+        }
+
+        switch(direction)
+        {
+            case "r":
+                charX++;
+                if(charX == map.size[1]) //画面外に出たかの判定
+                {
+                    this.isContinue = false; //継続判定をfalseに
+                    difference = new int[1,3]{{charX - 1, charY, 0}}; //差分情報の保存
+                }
+                else if(map.data[charY, charX] == 2) //もし壁のマスに進んだら
+                {
+                    this.isContinue = false; //継続判定をfalseに
+                    values = AroundChar(charX, charY); //一応情報を取得
+                    values[0] = 0; //ゲーム終了情報の記録
+                    difference = new int[2,3]{{charX - 1, charY, 0},{charX, charY, charNum + 2}}; //差分情報の保存
+                }
+                else if(map.data[charY, charX] == 3) //もしアイテムのマスに進んだら
+                {
+                    map.data[charY, charX - 1] = 2; //もといたマスに壁を設置
+                    values = AroundChar(charX, charY); //壁になった周辺情報を取得
+                    score = true;
+                    difference = new int[2,3]{{charX - 1, charY, 2},{charX, charY, charNum}}; //差分情報の保存
+                }
+                else
+                {
+                    values = AroundChar(charX, charY); //移動後の周辺情報を取得
+                    difference = new int[2,3]{{charX - 1, charY, 0},{charX, charY, charNum}}; //差分情報の保存
+                }
+            case "l":
+                charX--;
+                if(charX == -1) //画面外に出たかの判定
+                {
+                    this.isContinue = false; //継続判定をfalseに
+                    difference = new int[1,3]{{charX + 1, charY, 0}}; //差分情報の保存
+                }
+                else if(map.data[charY, charX] == 2) //もし壁のマスに進んだら
+                {
+                    this.isContinue = false; //継続判定をfalseに
+                    values = AroundChar(charX, charY); //一応情報を取得
+                    values[0] = 0; //ゲーム終了情報の記録
+                    difference = new int[2,3]{{charX + 1, charY, 0},{charX, charY, charNum + 2}}; //差分情報の保存
+                }
+                else if(map.data[charY, charX] == 3) //もしアイテムのマスに進んだら
+                {
+                    map.data[charY, charX + 1] = 2; //もといたマスに壁を設置
+                    values = AroundChar(charX, charY); //壁になった周辺情報を取得
+                    score = true;
+                    difference = new int[2,3]{{charX + 1, charY, 2},{charX, charY, charNum}}; //差分情報の保存
+                }
+                else
+                {
+                    values = AroundChar(charX, charY); //移動後の周辺情報を取得
+                    difference = new int[2,3]{{charX + 1, charY, 0},{charX, charY, charNum}}; //差分情報の保存
+                }
+            case "u":
+                charY--;
+                if(charY == -1) //画面外に出たかの判定
+                {
+                    this.isContinue = false; //継続判定をfalseに
+                    difference = new int[1,3]{{charX, charY + 1, 0}}; //差分情報の保存
+                }
+                else if(map.data[charY, charX] == 2) //もし壁のマスに進んだら
+                {
+                    this.isContinue = false; //継続判定をfalseに
+                    values = AroundChar(charX, charY); //一応情報を取得
+                    values[0] = 0; //ゲーム終了情報の記録
+                    difference = new int[2,3]{{charX, charY + 1, 0},{charX, charY, charNum + 2}}; //差分情報の保存
+                }
+                else if(map.data[charY, charX] == 3) //もしアイテムのマスに進んだら
+                {
+                    map.data[charY + 1, charX] = 2; //もといたマスに壁を設置
+                    values = AroundChar(charX, charY); //壁になった周辺情報を取得
+                    score = true;
+                    difference = new int[2,3]{{charX, charY + 1, 2},{charX, charY, charNum}}; //差分情報の保存
+                }
+                else
+                {
+                    values = AroundChar(charX, charY); //移動後の周辺情報を取得
+                    difference = new int[2,3]{{charX, charY + 1, 0},{charX, charY, charNum}}; //差分情報の保存
+                }
+            case "d":
+                charY++;
+                if(charY == map.size[0]) //画面外に出たかの判定
+                {
+                    this.isContinue = false; //継続判定をfalseに
+                    difference = new int[1,3]{{charX, charY - 1, 0}}; //差分情報の保存
+                }
+                else if(map.data[charY, charX] == 2) //もし壁のマスに進んだら
+                {
+                    this.isContinue = false; //継続判定をfalseに
+                    values = AroundChar(charX, charY); //一応情報を取得
+                    values[0] = 0; //ゲーム終了情報の記録
+                    difference = new int[2,3]{{charX, charY - 1, 0},{charX, charY, charNum + 2}}; //差分情報の保存
+                }
+                else if(map.data[charY, charX] == 3) //もしアイテムのマスに進んだら
+                {
+                    map.data[charY - 1, charX] = 2; //もといたマスに壁を設置
+                    values = AroundChar(charX, charY); //壁になった周辺情報を取得
+                    score = true;
+                    difference = new int[2,3]{{charX, charY - 1, 2},{charX, charY, charNum}}; //差分情報の保存
+                }
+                else
+                {
+                    values = AroundChar(charX, charY); //移動後の周辺情報を取得
+                    difference = new int[2,3]{{charX, charY - 1, 0},{charX, charY, charNum}}; //差分情報の保存
+                }
+        }
+        //char(X,Y)の位置をもとにchaserMap型に代入する
+        if(character.Equals("Cool"))
+        {
+            map.coolPosition[1] = charX;
+            map.coolPosition[0] = charY;
+            if(score) this.coolScore++;
+        }
+        else if(character.Equals("Hot"))
+        {
+            map.hotPosition[1] = charX;
+            map.hotPosition[0] = charY;
+            if(score) this.hotScore++;
+        }
+
+        --map.turn;
+        return values;
     }
 }
