@@ -33,8 +33,13 @@ public class MapManager
 
     }
 
-    public int[] getMapData()
+    public int[,] getMapData()
     {
+        return map.data;
+    }
 
+    public int[] getTurn()
+    {
+        return map.turn;
     }
 }
