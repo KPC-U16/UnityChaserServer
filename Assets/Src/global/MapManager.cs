@@ -73,6 +73,11 @@ public class MapManager
         return this.isContinue;
     }
 
+    public string[] getDifference()
+    {
+        return this.difference;
+    }
+
     //行動のメソッド系
 
     public int[] ActChar(string character, string command) //キャラクターを行動によってそれぞれのメソッドを呼ぶメソッド
