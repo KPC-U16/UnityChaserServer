@@ -73,7 +73,7 @@ public class MapManager
         return this.isContinue;
     }
 
-    public string[] getDifference()
+    public string[,] getDifference()
     {
         return this.difference;
     }
