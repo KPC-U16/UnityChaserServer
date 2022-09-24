@@ -178,121 +178,59 @@ public class MapManager
         switch(direction)
         {
             case "r":
-                charX++;
-                if(charX == map.size[1]) //画面外に出たかの判定
-                {
-                    this.isContinue = false; //継続判定をfalseに
-                    this.difference = new int[1,3]{{charX - 1, charY, 0}}; //差分情報の保存
-                }
-                else if(map.data[charY, charX] == 2) //もし壁のマスに進んだら
-                {
-                    this.isContinue = false; //継続判定をfalseに
-                    values = AroundChar(charX, charY, character); //一応情報を取得
-                    values[0] = 0; //ゲーム終了情報の記録
-                    this.difference = new int[2,3]{{charX - 1, charY, 0},{charX, charY, charNum + 2}}; //差分情報の保存
-                }
-                else if(map.data[charY, charX] == 3) //もしアイテムのマスに進んだら
-                {
-                    map.data[charY, charX - 1] = 2; //もといたマスに壁を設置
-                    values = AroundChar(charX, charY, character); //壁になった周辺情報を取得
-                    score = true;
-                    this.difference = new int[2,3]{{charX - 1, charY, 2},{charX, charY, charNum}}; //差分情報の保存
-                }
-                else
-                {
-                    values = AroundChar(charX, charY, character); //移動後の周辺情報を取得
-                    this.difference = new int[2,3]{{charX - 1, charY, 0},{charX, charY, charNum}}; //差分情報の保存
-                }
+                dCharX = charX + 1;
+                dCharY = charY;
+                break;
             case "l":
-                charX--;
-                if(charX == -1) //画面外に出たかの判定
-                {
-                    this.isContinue = false; //継続判定をfalseに
-                    this.difference = new int[1,3]{{charX + 1, charY, 0}}; //差分情報の保存
-                }
-                else if(map.data[charY, charX] == 2) //もし壁のマスに進んだら
-                {
-                    this.isContinue = false; //継続判定をfalseに
-                    values = AroundChar(charX, charY, character); //一応情報を取得
-                    values[0] = 0; //ゲーム終了情報の記録
-                    this.difference = new int[2,3]{{charX + 1, charY, 0},{charX, charY, charNum + 2}}; //差分情報の保存
-                }
-                else if(map.data[charY, charX] == 3) //もしアイテムのマスに進んだら
-                {
-                    map.data[charY, charX + 1] = 2; //もといたマスに壁を設置
-                    values = AroundChar(charX, charY, character); //壁になった周辺情報を取得
-                    score = true;
-                    this.difference = new int[2,3]{{charX + 1, charY, 2},{charX, charY, charNum}}; //差分情報の保存
-                }
-                else
-                {
-                    values = AroundChar(charX, charY, character); //移動後の周辺情報を取得
-                    this.difference = new int[2,3]{{charX + 1, charY, 0},{charX, charY, charNum}}; //差分情報の保存
-                }
+                dCharX = charX - 1;
+                dCharY = charY;
+                break;
             case "u":
-                charY--;
-                if(charY == -1) //画面外に出たかの判定
-                {
-                    this.isContinue = false; //継続判定をfalseに
-                    this.difference = new int[1,3]{{charX, charY + 1, 0}}; //差分情報の保存
-                }
-                else if(map.data[charY, charX] == 2) //もし壁のマスに進んだら
-                {
-                    this.isContinue = false; //継続判定をfalseに
-                    values = AroundChar(charX, charY, character); //一応情報を取得
-                    values[0] = 0; //ゲーム終了情報の記録
-                    this.difference = new int[2,3]{{charX, charY + 1, 0},{charX, charY, charNum + 2}}; //差分情報の保存
-                }
-                else if(map.data[charY, charX] == 3) //もしアイテムのマスに進んだら
-                {
-                    map.data[charY + 1, charX] = 2; //もといたマスに壁を設置
-                    values = AroundChar(charX, charY, character); //壁になった周辺情報を取得
-                    score = true;
-                    this.difference = new int[2,3]{{charX, charY + 1, 2},{charX, charY, charNum}}; //差分情報の保存
-                }
-                else
-                {
-                    values = AroundChar(charX, charY, character); //移動後の周辺情報を取得
-                    this.difference = new int[2,3]{{charX, charY + 1, 0},{charX, charY, charNum}}; //差分情報の保存
-                }
+                dCharX = charX;
+                dCharY = charY - 1;
+                break;
             case "d":
-                charY++;
-                if(charY == map.size[0]) //画面外に出たかの判定
-                {
-                    this.isContinue = false; //継続判定をfalseに
-                    this.difference = new int[1,3]{{charX, charY - 1, 0}}; //差分情報の保存
-                }
-                else if(map.data[charY, charX] == 2) //もし壁のマスに進んだら
-                {
-                    this.isContinue = false; //継続判定をfalseに
-                    values = AroundChar(charX, charY, character); //一応情報を取得
-                    values[0] = 0; //ゲーム終了情報の記録
-                    this.difference = new int[2,3]{{charX, charY - 1, 0},{charX, charY, charNum + 2}}; //差分情報の保存
-                }
-                else if(map.data[charY, charX] == 3) //もしアイテムのマスに進んだら
-                {
-                    map.data[charY - 1, charX] = 2; //もといたマスに壁を設置
-                    values = AroundChar(charX, charY, character); //壁になった周辺情報を取得
-                    score = true;
-                    this.difference = new int[2,3]{{charX, charY - 1, 2},{charX, charY, charNum}}; //差分情報の保存
-                }
-                else
-                {
-                    values = AroundChar(charX, charY, character); //移動後の周辺情報を取得
-                    this.difference = new int[2,3]{{charX, charY - 1, 0},{charX, charY, charNum}}; //差分情報の保存
-                }
+                dCharX = charX;
+                dCharY = charY + 1;
+                break;
         }
+
+        if(charX < 0 || charX >= map.size[1] || charY < 0 || charY >= map.size[0]) //画面外に出たかの判定
+        {
+            this.isContinue = false; //継続判定をfalseに
+            this.difference = new int[1,3]{{charX, charY, 0}}; //差分情報の保存
+        }
+        else if(map.data[dCharY, dCharX] == 2) //もし壁のマスに進んだら
+        {
+            this.isContinue = false; //継続判定をfalseに
+            values = AroundChar(dCharX, dCharY, character); //一応情報を取得
+            values[0] = 0; //ゲーム終了情報の記録
+            this.difference = new int[2,3]{{charX, charY, 0},{dCharX, dCharY, charNum + 2}}; //差分情報の保存
+        }
+        else if(map.data[dCharY, dCharX] == 3) //もしアイテムのマスに進んだら
+        {
+            map.data[charY, charX] = 2; //もといたマスに壁を設置
+            values = AroundChar(dCharX, dCharY, character); //壁になった周辺情報を取得
+            score = true;
+            this.difference = new int[2,3]{{charX, charY, 2},{dCharX, dCharY, charNum}}; //差分情報の保存
+        }
+        else
+        {
+            values = AroundChar(dCharX, dCharY, character); //移動後の周辺情報を取得
+            this.difference = new int[2,3]{{charX, charY, 0},{dCharX, dCharY, charNum}}; //差分情報の保存
+        }
+
         //char(X,Y)の位置をもとにchaserMap型に代入する
         if(character.Equals("Cool"))
         {
-            map.coolPosition[1] = charX;
-            map.coolPosition[0] = charY;
+            map.coolPosition[1] = dCharX;
+            map.coolPosition[0] = dCharY;
             if(score) this.coolScore++;
         }
         else if(character.Equals("Hot"))
         {
-            map.hotPosition[1] = charX;
-            map.hotPosition[0] = charY;
+            map.hotPosition[1] = dCharX;
+            map.hotPosition[0] = dCharY;
             if(score) this.hotScore++;
         }
 
