@@ -482,12 +482,14 @@ public class MapManager
                 {
                     this.isContinue = false; //継続判定をfalseに
                     map.data[charY, charX + 1] = 2;
+                    values = AroundChar(charX, charY, character); //xとyの周辺情報を返す
                     this.difference = new int[1,3]{{charX + 1, charY, charNum + 2}}; //差分情報の保存
                 }
                 else if(charX + 1 == hotPosition[0] && charY == hotPosition[1])
                 {
                     this.isContinue = false; //継続判定をfalseに
                     map.data[charY, charX + 1] = 2;
+                    values = AroundChar(charX, charY, character); //xとyの周辺情報を返す
                     this.difference = new int[1,3]{{charX + 1, charY, charNum + 2}}; //差分情報の保存
                 }
                 else
@@ -506,12 +508,14 @@ public class MapManager
                 {
                     this.isContinue = false; //継続判定をfalseに
                     map.data[charY, charX - 1] = 2;
+                    values = AroundChar(charX, charY, character); //xとyの周辺情報を返す
                     this.difference = new int[1,3]{{charX - 1, charY, charNum + 2}}; //差分情報の保存
                 }
                 else if(charX - 1 == hotPosition[0] && charY == hotPosition[1])
                 {
                     this.isContinue = false; //継続判定をfalseに
                     map.data[charY, charX - 1] = 2;
+                    values = AroundChar(charX, charY, character); //xとyの周辺情報を返す
                     this.difference = new int[1,3]{{charX - 1, charY, charNum + 2}}; //差分情報の保存
                 }
                 else
@@ -530,12 +534,14 @@ public class MapManager
                 {
                     this.isContinue = false; //継続判定をfalseに
                     map.data[charY - 1, charX] = 2;
+                    values = AroundChar(charX, charY, character); //xとyの周辺情報を返す
                     this.difference = new int[1,3]{{charX, charY - 1, charNum + 2}}; //差分情報の保存
                 }
                 else if(charX == hotPosition[0] && charY - 1 == hotPosition[1])
                 {
                     this.isContinue = false; //継続判定をfalseに
                     map.data[charY - 1, charX] = 2;
+                    values = AroundChar(charX, charY, character); //xとyの周辺情報を返す
                     this.difference = new int[1,3]{{charX, charY - 1, charNum + 2}}; //差分情報の保存
                 }
                 else
@@ -554,12 +560,14 @@ public class MapManager
                 {
                     this.isContinue = false; //継続判定をfalseに
                     map.data[charY + 1, charX] = 2;
+                    values = AroundChar(charX, charY, character); //xとyの周辺情報を返す
                     this.difference = new int[1,3]{{charX, charY + 1, charNum + 2}}; //差分情報の保存
                 }
                 else if(charX == hotPosition[0] && charY + 1 == hotPosition[1])
                 {
                     this.isContinue = false; //継続判定をfalseに
                     map.data[charY + 1, charX] = 2;
+                    values = AroundChar(charX, charY, character); //xとyの周辺情報を返す
                     this.difference = new int[1,3]{{charX, charY + 1, charNum + 2}}; //差分情報の保存
                 }
                 else
