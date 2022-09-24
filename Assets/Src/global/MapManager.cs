@@ -175,22 +175,21 @@ public class MapManager
             charNum = 5;
         }
 
+        int dCharX = charX;
+        int dCharY = charY;
+
         switch(direction)
         {
             case "r":
                 dCharX = charX + 1;
-                dCharY = charY;
                 break;
             case "l":
                 dCharX = charX - 1;
-                dCharY = charY;
                 break;
             case "u":
-                dCharX = charX;
                 dCharY = charY - 1;
                 break;
             case "d":
-                dCharX = charX;
                 dCharY = charY + 1;
                 break;
         }
