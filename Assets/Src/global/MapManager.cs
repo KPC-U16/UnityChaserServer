@@ -159,7 +159,7 @@ public class MapManager
         int charX;
         int charY;
         int charNum;
-        bool score;
+        bool score = false;
 
         //char(X,Y)に位置を代入する
         if(character.Equals("Cool"))
@@ -175,26 +175,28 @@ public class MapManager
             charNum = 5;
         }
 
+        //移動後の値をdChar(X,Y)としてchar(X,Y)で初期化して宣言
         int dCharX = charX;
         int dCharY = charY;
 
+        //方向によって移動量を調整
         switch(direction)
         {
-            case "r":
-                dCharX = charX + 1;
+            case "r": //右方向なら
+                dCharX = charX + 1; //x+1
                 break;
-            case "l":
-                dCharX = charX - 1;
+            case "l": //左方向なら
+                dCharX = charX - 1; //x-1
                 break;
-            case "u":
-                dCharY = charY - 1;
+            case "u": //上方向なら
+                dCharY = charY - 1; //y-1
                 break;
-            case "d":
-                dCharY = charY + 1;
+            case "d": //下方向なら
+                dCharY = charY + 1; //y+1
                 break;
         }
 
-        if(charX < 0 || charX >= map.size[1] || charY < 0 || charY >= map.size[0]) //画面外に出たかの判定
+        if(dCharX < 0 || dCharX >= map.size[1] || dCharY < 0 || dCharY >= map.size[0]) //画面外に出たかの判定
         {
             this.isContinue = false; //継続判定をfalseに
             this.difference = new int[1,3]{{charX, charY, 0}}; //差分情報の保存
@@ -210,7 +212,7 @@ public class MapManager
         {
             map.data[charY, charX] = 2; //もといたマスに壁を設置
             values = AroundChar(dCharX, dCharY, character); //壁になった周辺情報を取得
-            score = true;
+            score = true; //スコアの加算を有効化
             this.difference = new int[2,3]{{charX, charY, 2},{dCharX, dCharY, charNum}}; //差分情報の保存
         }
         else
@@ -260,21 +262,16 @@ public class MapManager
         {
             case "r":
                 charX += 2;
-                values = AroundChar(charX, charY, character);
-                this.difference = null;
             case "l":
                 charX -= 2;
-                values = AroundChar(charX, charY, character);
-                this.difference = null;
             case "u":
                 charY -= 2;
-                values = AroundChar(charX, charY, character);
-                this.difference = null;
             case "d":
                 charY += 2;
-                values = AroundChar(charX, charY, character);
-                this.difference = null;
         }
+
+        values = AroundChar(charX, charY, character);
+        this.difference = null;
 
         --map.turn;
         return values;
@@ -299,93 +296,45 @@ public class MapManager
             charY = map.hotPosition[0];
         }
 
+        int dCharX = 0;
+        int dCharY = 0;
+
         switch(direction)
         {
             case "r":
-                for(int i = 1; i <= 9; i++)
-                {
-                    if(charX + i >= map.size[1])
-                    {
-                        values[i] = 0;
-                    }
-                    else if(character.Equals("Hot") && charX + i == coolPosition[0] && charY == coolPosition[1])
-                    {
-                        values[i] = 1;
-                    }
-                    else if(character.Equals("Cool") && charX + i == hotPosition[0] && charY == hotPosition[1])
-                    {
-                        values[i] = 1;
-                    }
-                    else
-                    {
-                        values[i] = map.data[charY, charX + i];
-                    }
-                }
-                this.difference = null;
+                dCharX = 1;
+                break;
             case "l":
-                for(int i = 1; i<= 9; i++)
-                {
-                    if(charX - i < 0)
-                    {
-                        values[i] = 0;
-                    }
-                    else if(character.Equals("Hot") && charX - i == coolPosition[0] && charY == coolPosition[1])
-                    {
-                        values[i] = 1;
-                    }
-                    else if(character.Equals("Cool") && charX - i == hotPosition[0] && charY == hotPosition[1])
-                    {
-                        values[i] = 1;
-                    }
-                    else
-                    {
-                        values[i] = map.data[charY, charX - i];
-                    }
-                }
-                this.difference = null;
+                dCharX = -1;
+                break;
             case "u":
-                for(int i = 1; i<= 9; i++)
-                {
-                    if(charY - i < 0)
-                    {
-                        values[i] = 0;
-                    }
-                    else if(character.Equals("Hot") && charX == coolPosition[0] && charY - i == coolPosition[1])
-                    {
-                        values[i] = 1;
-                    }
-                    else if(character.Equals("Cool") && charX == hotPosition[0] && charY - i == hotPosition[1])
-                    {
-                        values[i] = 1;
-                    }
-                    else
-                    {
-                        values[i] = map.data[charY - i, charX];
-                    }
-                }
-                this.difference = null;
+                dCharY = -1;
+                break;
             case "d":
-                for(int i = 1; i<= 9; i++)
-                {
-                    if(charY + i >= map.size[0])
-                    {
-                        values[i] = 0;
-                    }
-                    else if(character.Equals("Hot") && charX == coolPosition[0] && charY + i == coolPosition[1])
-                    {
-                        values[i] = 1;
-                    }
-                    else if(character.Equals("Cool") && charX == hotPosition[0] && charY + i == hotPosition[1])
-                    {
-                        values[i] = 1;
-                    }
-                    else
-                    {
-                        values[i] = map.data[charY + i, charX];
-                    }
-                }
-                this.difference = null;
+                dCharY = 1;
+                break;
         }
+
+        for(int i = 1; i <= 9; i++)
+        {
+            if(charX + (i * dCharX) < 0 || charX + (i * dCharX) >= map.size[1] || charY + (i * dCharY) < 0 || charY + (i * dCharY) >= map.size[0])
+            {
+                values[i] = 0;
+            }
+            else if(character.Equals("Hot") && charX + (i * dCharX) == coolPosition[0] && charY + (i * dCharY)== coolPosition[1])
+            {
+                values[i] = 1;
+            }
+            else if(character.Equals("Cool") && charX + (i * dCharX) == hotPosition[0] && charY + (i * dCharY)== hotPosition[1])
+            {
+                values[i] = 1;
+            }
+            else
+            {
+                values[i] = map.data[charY + (i * dCharY), charX + (i * dCharX)];
+            }
+        }
+        this.difference = null;
 
         --map.turn;
         return values;
@@ -412,112 +361,49 @@ public class MapManager
             charNum = 5;
         }
 
+        int dCharX = charX;
+        int dCharY = charY;
+
         switch(direction)
         {
             case "r":
-                if(charX + 1 >= map.size[1])
-                {
-                    values = AroundChar(charX, charY, character); //xとyの周辺情報を返す
-                    this.difference = null;
-                }
-                else if(charX + 1 == coolPosition[0] && charY == coolPosition[1])
-                {
-                    this.isContinue = false; //継続判定をfalseに
-                    map.data[charY, charX + 1] = 2;
-                    values = AroundChar(charX, charY, character); //xとyの周辺情報を返す
-                    this.difference = new int[1,3]{{charX + 1, charY, charNum + 2}}; //差分情報の保存
-                }
-                else if(charX + 1 == hotPosition[0] && charY == hotPosition[1])
-                {
-                    this.isContinue = false; //継続判定をfalseに
-                    map.data[charY, charX + 1] = 2;
-                    values = AroundChar(charX, charY, character); //xとyの周辺情報を返す
-                    this.difference = new int[1,3]{{charX + 1, charY, charNum + 2}}; //差分情報の保存
-                }
-                else
-                {
-                    map.data[charY, charX + 1] = 2;
-                    values = AroundChar(charX, charY, character); //xとyの周辺情報を返す
-                    this.difference = new int[1,3]{{charX + 1, charY, 2}}; //差分情報の保存
-                }
+                dCharX = charX + 1;
+                break;
             case "l":
-                if(charX - 1 < 0)
-                {
-                    values = AroundChar(charX, charY, character); //xとyの周辺情報を返す
-                    this.difference = null;
-                }
-                else if(charX - 1 == coolPosition[0] && charY == coolPosition[1])
-                {
-                    this.isContinue = false; //継続判定をfalseに
-                    map.data[charY, charX - 1] = 2;
-                    values = AroundChar(charX, charY, character); //xとyの周辺情報を返す
-                    this.difference = new int[1,3]{{charX - 1, charY, charNum + 2}}; //差分情報の保存
-                }
-                else if(charX - 1 == hotPosition[0] && charY == hotPosition[1])
-                {
-                    this.isContinue = false; //継続判定をfalseに
-                    map.data[charY, charX - 1] = 2;
-                    values = AroundChar(charX, charY, character); //xとyの周辺情報を返す
-                    this.difference = new int[1,3]{{charX - 1, charY, charNum + 2}}; //差分情報の保存
-                }
-                else
-                {
-                    map.data[charY, charX - 1] = 2;
-                    values = AroundChar(charX, charY, character); //xとyの周辺情報を返す
-                    this.difference = new int[1,3]{{charX - 1, charY, 2}}; //差分情報の保存
-                }
+                dCharX = charX - 1;
+                break;
             case "u":
-                if(charY - 1 < 0)
-                {
-                    values = AroundChar(charX, charY, character); //xとyの周辺情報を返す
-                    this.difference = null;
-                }
-                else if(charX == coolPosition[0] && charY - 1 == coolPosition[1])
-                {
-                    this.isContinue = false; //継続判定をfalseに
-                    map.data[charY - 1, charX] = 2;
-                    values = AroundChar(charX, charY, character); //xとyの周辺情報を返す
-                    this.difference = new int[1,3]{{charX, charY - 1, charNum + 2}}; //差分情報の保存
-                }
-                else if(charX == hotPosition[0] && charY - 1 == hotPosition[1])
-                {
-                    this.isContinue = false; //継続判定をfalseに
-                    map.data[charY - 1, charX] = 2;
-                    values = AroundChar(charX, charY, character); //xとyの周辺情報を返す
-                    this.difference = new int[1,3]{{charX, charY - 1, charNum + 2}}; //差分情報の保存
-                }
-                else
-                {
-                    map.data[charY - 1, charX] = 2;
-                    values = AroundChar(charX, charY, character); //xとyの周辺情報を返す
-                    this.difference = new int[1,3]{{charX, charY - 1, 2}}; //差分情報の保存
-                }
+                dCharY = charY - 1;
+                break;
             case "d":
-                if(charY + 1 < 0)
-                {
-                    values = AroundChar(charX, charY, character); //xとyの周辺情報を返す
-                    this.difference = null;
-                }
-                else if(charX == coolPosition[0] && charY + 1 == coolPosition[1])
-                {
-                    this.isContinue = false; //継続判定をfalseに
-                    map.data[charY + 1, charX] = 2;
-                    values = AroundChar(charX, charY, character); //xとyの周辺情報を返す
-                    this.difference = new int[1,3]{{charX, charY + 1, charNum + 2}}; //差分情報の保存
-                }
-                else if(charX == hotPosition[0] && charY + 1 == hotPosition[1])
-                {
-                    this.isContinue = false; //継続判定をfalseに
-                    map.data[charY + 1, charX] = 2;
-                    values = AroundChar(charX, charY, character); //xとyの周辺情報を返す
-                    this.difference = new int[1,3]{{charX, charY + 1, charNum + 2}}; //差分情報の保存
-                }
-                else
-                {
-                    map.data[charY + 1, charX] = 2;
-                    values = AroundChar(charX, charY, character); //xとyの周辺情報を返す
-                    this.difference = new int[1,3]{{charX, charY + 1, 2}}; //差分情報の保存
-                }
+                dCharY = charY + 1;
+                break;
+        }
+
+        if(dCharX < 0 || dCharX >= map.size[1] || dCharY < 0 || dCharY >= map.size[0])
+        {
+            values = AroundChar(charX, charY, character); //xとyの周辺情報を返す
+            this.difference = null;
+        }
+        else if(dCharX == coolPosition[0] && dCharY == coolPosition[1])
+        {
+            this.isContinue = false; //継続判定をfalseに
+            map.data[dCharY, dCharX] = 2;
+            values = AroundChar(charX, charY, character); //xとyの周辺情報を返す
+            this.difference = new int[1,3]{{dCharX, dCharY, charNum + 2}}; //差分情報の保存
+        }
+        else if(dCharX == hotPosition[0] && dCharY == hotPosition[1])
+        {
+            this.isContinue = false; //継続判定をfalseに
+            map.data[dCharY, dCharX] = 2;
+            values = AroundChar(charX, charY, character); //xとyの周辺情報を返す
+            this.difference = new int[1,3]{{dCharX, dCharY, charNum + 2}}; //差分情報の保存
+        }
+        else
+        {
+            map.data[dCharY, dCharX] = 2;
+            values = AroundChar(charX, charY, character); //xとyの周辺情報を返す
+            this.difference = new int[1,3]{{dCharX, dCharY, 2}}; //差分情報の保存
         }
 
         --map.turn;
