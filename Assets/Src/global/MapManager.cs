@@ -3,7 +3,7 @@ using System;
 public class MapManager
 {
     ChaserMap map = new ChaserMap(); //mapにChaserMap型をnewしてインスタンスを作る
-    int hotScorei = 0; //ホットのスコアを持つ
+    int hotScore = 0; //ホットのスコアを持つ
     int coolScore = 0; //クールのスコアを持つ
     string[,] difference; //mapの直近のデータを持つ
     bool isContinue = true; //ゲームの継続判定
