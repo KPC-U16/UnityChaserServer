@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 using UnityEngine.UI;
+using System.Threading.Tasks;
 
 public class ConnectButton : MonoBehaviour
 {
@@ -41,6 +42,7 @@ public class ConnectButton : MonoBehaviour
 
             inputPort.interactable = true;
             selectUser.interactable = true;
+            gameManager.ConClose(team);
         }
         else if (!clicked)
         {
@@ -52,5 +54,18 @@ public class ConnectButton : MonoBehaviour
             gameManager.ConWait(team,port);
         }
         clicked = !clicked;
+    }
+
+    public void InitButton()
+    {
+        clicked = false;
+        Image buttonImage = gameObject.GetComponent<Image>();
+        Text buttonText = gameObject.GetComponentInChildren<Text>();
+
+        buttonImage.color = Color.white;
+        buttonText.text = "接続開始";
+
+        inputPort.interactable = true;
+        selectUser.interactable = true;
     }
 }

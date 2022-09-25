@@ -1,3 +1,4 @@
+using System;
 using System.Data;
 using System.Threading;
 using System.ComponentModel;
@@ -12,6 +13,7 @@ public class ClientControl
 {
     
     SocketControl client;
+    public string name = null;
 
     public ClientControl(int Port){
         
@@ -22,10 +24,19 @@ public class ClientControl
 /// <summary>
 /// クライアントにサーバーの準備が完了したことを通知する
 /// </summary>
-/// <returns>Clientの名前<string></returns>
-    public async Task<string> Ready(){
-        await client.StartListening();
-        return await client.ReceptionAsync();
+/// <returns></returns>
+    public async Task<bool> Ready(){
+        // Readyを実行中は原則すべての例外から復旧可能なので握り潰す 
+        try{
+            await client.StartListening();
+            this.name = await client.ReceptionAsync(-1);
+            return true;
+        }
+        catch{
+            
+            return false;
+        }
+    
     }
 
 /// <summary>
@@ -36,6 +47,22 @@ public class ClientControl
     public async Task<string> Send(string instruction){
         await client.SendAsync(instruction+"\r\n");
         return await client.ReceptionAsync();
+    }
+
+/// <summary>
+/// 接続してきたクライアントのIPアドレスを返答する
+/// </summary>
+/// <returns></returns>
+    public string getClientIP(){
+        return client.GetRemoteIP();
+    }
+
+/// <summary>
+/// クライアントとソケットが維持できているか返答する
+/// </summary>
+/// <returns></returns>
+    public bool IsConnected(){
+        return client.IsConnected();
     }
 
 /// <summary>
