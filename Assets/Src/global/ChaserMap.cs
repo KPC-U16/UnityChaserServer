@@ -16,10 +16,10 @@ public class ChaserMap
     {
         this.name = null;
         this.turn = 0;
-        this.size = null;
+        this.size = new int[2]{0,0};
         this.data = null;
-        this.hotPosition = null;
-        this.coolPosition = null;
+        this.hotPosition = new int[2]{0,0};
+        this.coolPosition = new int[2]{0,0};
     }
 
     public async Task<string> setMap(string path) //.mapファイルからmapクラスに展開する
@@ -88,5 +88,24 @@ public class ChaserMap
                 break;
         }
         return n;
+    }
+
+    //ゲッター系
+    public int getItem() //アイテムの総数を返すメソッド
+    {
+        int itemAmount = 0;
+
+        for(int i = 0; i < this.size[1]; i++)
+        {
+            for(int j = 0; j < this.size[0]; j++)
+            {
+                if(this.data[i,j] == 3)
+                {
+                    itemAmount++;
+                }
+            }
+        }
+
+        return itemAmount;
     }
 }
