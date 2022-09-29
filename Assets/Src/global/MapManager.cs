@@ -217,6 +217,7 @@ public class MapManager
         else if(map.data[dCharY, dCharX] == 3) //もしアイテムのマスに進んだら
         {
             map.data[charY, charX] = 2; //もといたマスに壁を設置
+            map.data[dCharY, dCharX] = 0; //もといたマスを通路(0)に変更
             values = AroundChar(dCharX, dCharY, character); //壁になった周辺情報を取得
             score = true; //スコアの加算を有効化
             this.difference = new int[2,3]{{charX, charY, 2},{dCharX, dCharY, charNum}}; //差分情報の保存
