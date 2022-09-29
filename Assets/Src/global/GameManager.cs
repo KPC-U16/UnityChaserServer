@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 using System.Threading.Tasks;
+using UnityEngine.UI;
 
 public class GameManager : SingletonMonoBehaviour<GameManager>
 {
@@ -14,6 +15,11 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
 
     public ConnectButton coolConButton;
     public ConnectButton hotConButton;
+
+    public StartButton startButton;
+
+    MapManager mapManager;
+
 
     private bool gameStarted = false;
 
@@ -45,6 +51,7 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
         bool success;
         Debug.Log(team);
         Debug.Log(port);
+
         switch (team)
         {
             case "Cool":
@@ -54,6 +61,7 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
                 if (success)
                 {
                     coolShowData.Reflect("準備完了",cool.name,cool.getClientIP());
+                    startButton.Ready(team);
                 }
             break;
             case "Hot":
@@ -63,6 +71,7 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
                 if (success)
                 {
                     hotShowData.Reflect("準備完了",hot.name,hot.getClientIP());
+                    startButton.Ready(team);
                 }
             break;
         }
@@ -79,11 +88,13 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
                 coolShowData.Reflect("非接続","不明","不明");
                 cool.End();
                 cool = null;
+                startButton.NotReady(team);
             break;
             case "Hot":
                 hotShowData.Reflect("非接続","不明","不明");
                 hot.End();
                 hot = null;
+                startButton.NotReady(team);
             break;
         }
         
@@ -99,12 +110,11 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
                 case "Cool":
                     if (cool == null) yield break;
 
-                    Debug.Log(cool.IsConnected());
-
                     if (!cool.IsConnected())
                     {
                         coolShowData.Reflect("非接続","不明","不明");
                         coolConButton.InitButton();
+                        startButton.NotReady(team);
                         yield break;
                     }
                 break;
@@ -114,7 +124,8 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
                     if (!hot.IsConnected())
                     {
                         hotShowData.Reflect("非接続","不明","不明");
-                        coolConButton.InitButton();
+                        hotConButton.InitButton();
+                        startButton.NotReady(team);
                         yield break;
                     }
                 break;
@@ -122,8 +133,58 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
         }
     }
 
-    public void GameStart()
+    public async void GameStart(string mapPath)
     {
+        mapManager = new MapManager();
+        mapManager.setMap(mapPath);
+        int[,] mapData = mapManager.getMapData();
+        int turn = mapManager.getTurn();
+        int item = mapManager.getItem();
+
+        await Action(true);
+    }
+
+    void GameEnd()
+    {
+        Debug.Log("game end");
+    }
+
+    async Task Action(bool isCool)
+    {
+        string recieve;
+        int[] returnData;
+        string team;
+
+        while (true)
+        {
+            if (!mapManager.getIsContinue()) GameEnd();
+            team = isCool ? "Cool" : "Hot";
+            Debug.Log(mapManager.getTurn());
+            
+            switch (team)
+            {
+                case "Cool":
+                    Debug.Log(team);
+                    recieve = await cool.Send("@"); //行動開始命令
+                    returnData = mapManager.ActChar(team,recieve);
+                    recieve = await cool.Send(string.Join("",returnData));
+                    returnData = mapManager.ActChar(team,recieve);
+                    recieve = await cool.Send(string.Join("",returnData));
+                    if (recieve == "#") Debug.Log("OK");
+                    break;
+                case "Hot":
+                    Debug.Log(team);
+                    recieve = await hot.Send("@"); //行動開始命令
+                    returnData = mapManager.ActChar(team,recieve);
+                    recieve = await hot.Send(string.Join("",returnData));
+                    returnData = mapManager.ActChar(team,recieve);
+                    recieve = await hot.Send(string.Join("",returnData));
+                    if (recieve == "#") Debug.Log("OK");
+                    break;
+            }
+
+            isCool = !isCool;
+        }
 
     }
 }
