@@ -179,11 +179,11 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
                     Debug.Log(recieve);
                     returnData = mapManager.ActChar(team,recieve);
                     Debug.Log(string.Join(",",returnData));
-                    recieve = await cool.Send(string.Join(",",returnData));
+                    recieve = await cool.Send(string.Join("",returnData));
                     Debug.Log(recieve);
                     returnData = mapManager.ActChar(team,recieve);
                     Debug.Log(string.Join(",",returnData));
-                    recieve = await cool.Send(string.Join(team,returnData));
+                    recieve = await cool.Send(string.Join("",returnData));
                     Debug.Log(recieve);
                     if (recieve == "#") Debug.Log("OK");
                     break;
@@ -193,11 +193,11 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
                     Debug.Log(recieve);
                     returnData = mapManager.ActChar(team,recieve);
                     Debug.Log(string.Join(",",returnData));
-                    recieve = await hot.Send(string.Join(",",returnData));
+                    recieve = await hot.Send(string.Join("",returnData));
                     Debug.Log(recieve);
                     returnData = mapManager.ActChar(team,recieve);
                     Debug.Log(string.Join(",",returnData));
-                    recieve = await hot.Send(string.Join(team,returnData));
+                    recieve = await hot.Send(string.Join("",returnData));
                     Debug.Log(recieve);
                     if (recieve == "#") Debug.Log("OK");
                     break;
