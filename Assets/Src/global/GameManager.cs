@@ -4,6 +4,8 @@ using UnityEngine;
 
 using System.Threading.Tasks;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
+using System;
 
 public class GameManager : SingletonMonoBehaviour<GameManager>
 {
@@ -19,6 +21,9 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
     public StartButton startButton;
 
     MapManager mapManager;
+    viewManager viewManager;
+
+    public Sprite[] texture;
 
 
     private bool gameStarted = false;
@@ -37,13 +42,29 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
     // Start is called before the first frame update
     void Start()
     {
-        
+        SceneManager.sceneLoaded += SceneLoaded;
     }
 
     // Update is called once per frame
     void Update()
     {
         
+    }
+
+    async void SceneLoaded(Scene nextScene,LoadSceneMode mode)
+    {
+        if (nextScene.name == "game-demo")
+        {
+            viewManager = GameObject.Find("BoardBack").GetComponent<viewManager>();
+            viewManager.SetView(cool.name,hot.name,mapManager.getTurn(),mapManager.getMapData(),texture);
+            await Action(true);
+        }
+    }
+
+    public void SetTexture(Sprite[] tex)
+    {
+        texture = new Sprite[tex.Length];
+        Array.Copy(tex,texture,tex.Length);
     }
 
     public async void ConWait(string team,string port)
@@ -133,15 +154,11 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
         }
     }
 
-    public async void GameStart(string mapPath)
+    public void GameStart(string mapPath)
     {
         mapManager = new MapManager();
         mapManager.setMap(mapPath);
-        int[,] mapData = mapManager.getMapData();
-        int turn = mapManager.getTurn();
-        int item = mapManager.getItem();
-
-        await Action(true);
+        SceneManager.LoadScene("game-demo");
     }
 
     void GameEnd()
@@ -170,7 +187,7 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
                     recieve = await cool.Send(string.Join("",returnData));
                     returnData = mapManager.ActChar(team,recieve);
                     recieve = await cool.Send(string.Join("",returnData));
-                    if (recieve == "#") Debug.Log("OK");
+                    if (recieve == "#\r\n") Debug.Log("OK");
                     break;
                 case "Hot":
                     Debug.Log(team);
@@ -179,9 +196,13 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
                     recieve = await hot.Send(string.Join("",returnData));
                     returnData = mapManager.ActChar(team,recieve);
                     recieve = await hot.Send(string.Join("",returnData));
-                    if (recieve == "#") Debug.Log("OK");
+                    if (recieve == "#\r\n") Debug.Log("OK");
                     break;
             }
+
+            await Task.Delay(500);
+            viewManager.Act(mapManager.getDifference());
+            viewManager.SetTurn(mapManager.getTurn());
 
             isCool = !isCool;
         }
