@@ -130,8 +130,7 @@ public class MapManager
 
     private int[] AroundChar(int charX, int charY, string character) //与えられた座標の周辺情報の取得
     {
-        //int[] values = new int[10]{1,0,0,0,0,0,0,0,0,0}; //デフォルトとしてゲームが継続できないときの情報で初期化する
-        int[] values = new int[10]{1,1,1,1,1,1,1,1,1,1}; //デフォルトとしてゲームが継続できないときの情報で初期化する
+        int[] values = new int[10]{1,0,0,0,0,0,0,0,0,0}; //デフォルトとしてゲームが継続できないときの情報で初期化する
         int n = 0; //2重for文の回った回数(valuesの番地)
 
         for(int i = -1; i < 2; i++)
@@ -139,10 +138,9 @@ public class MapManager
             for(int j = -1; j < 2; j++)
             {
                 n = n + 1;
-                if(charX + j < 0 || charX + j >= map.size[1] || charY + i < 0 || charY + i >= map.size[0]) //マップの範囲外を見たとき
+                if(charX + j < 0 || charX + j >= map.size[0] || charY + i < 0 || charY + i >= map.size[1]) //マップの範囲外を見たとき
                 {
-                    //values[n] = 2; //2(壁)を代入
-                    values[n] = n + 5;
+                    values[n] = 2; //2(壁)を代入
                 }
                 else if(character.Equals("Hot") && charX + j == map.coolPosition[0] && charY + i == map.coolPosition[1])
                 {
@@ -154,8 +152,7 @@ public class MapManager
                 }
                 else
                 {
-                    //values[n] = map.data[charY + i, charX + j]; //valuesにデータを代入
-                    values[n] = n + 5;
+                    values[n] = map.data[charY + i, charX + j]; //valuesにデータを代入
                 }
             }
         }
@@ -329,7 +326,7 @@ public class MapManager
 
         for(int i = 1; i <= 9; i++)
         {
-            if(charX + (i * dCharX) < 0 || charX + (i * dCharX) > map.size[1] || charY + (i * dCharY) < 0 || charY + (i * dCharY) > map.size[0]) //mapの範囲外を見たとき
+            if(charX + (i * dCharX) < 0 || charX + (i * dCharX) > map.size[0] || charY + (i * dCharY) < 0 || charY + (i * dCharY) > map.size[1]) //mapの範囲外を見たとき
             {
                 values[i] = 2; //2(壁)を返す
             }
