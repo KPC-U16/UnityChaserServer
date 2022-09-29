@@ -56,7 +56,7 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
         if (nextScene.name == "game-demo")
         {
             viewManager = GameObject.Find("BoardBack").GetComponent<viewManager>();
-            viewManager.setView(mapManager.getTurn(),mapManager.getMapData(),texture);
+            viewManager.SetView(cool.name,hot.name,mapManager.getTurn(),mapManager.getMapData(),texture);
             await Action(true);
         }
     }
@@ -187,7 +187,7 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
                     recieve = await cool.Send(string.Join("",returnData));
                     returnData = mapManager.ActChar(team,recieve);
                     recieve = await cool.Send(string.Join("",returnData));
-                    if (recieve == "#") Debug.Log("OK");
+                    if (recieve == "#\r\n") Debug.Log("OK");
                     break;
                 case "Hot":
                     Debug.Log(team);
@@ -196,12 +196,13 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
                     recieve = await hot.Send(string.Join("",returnData));
                     returnData = mapManager.ActChar(team,recieve);
                     recieve = await hot.Send(string.Join("",returnData));
-                    if (recieve == "#") Debug.Log("OK");
+                    if (recieve == "#\r\n") Debug.Log("OK");
                     break;
             }
 
-            await Task.Delay(1000);
+            await Task.Delay(500);
             viewManager.Act(mapManager.getDifference());
+            viewManager.SetTurn(mapManager.getTurn());
 
             isCool = !isCool;
         }

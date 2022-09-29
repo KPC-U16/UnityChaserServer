@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 
 using System;
+using UnityEngine.UI;
 
 public class viewManager : MonoBehaviour
 {
     public GameObject tileObject = null;
+    public Text turnText = null;
     GameObject[,] viewObjList;
 
     Sprite[] texture;
@@ -29,21 +31,34 @@ public class viewManager : MonoBehaviour
 
         for (int a=0;a<diff.GetLength(0);a++)
         {
-                string type;
-                type = "none";
-                if (diff[a,2] == 2) type = "block";
-                if (diff[a,2] == 3) type = "item";
-                if (diff[a,2] == 4) type = "cool";
-                if (diff[a,2] == 5) type = "hot";
+            string type;
+            type = "none";
+            if (diff[a,2] == 2) type = "block";
+            if (diff[a,2] == 3) type = "item";
+            if (diff[a,2] == 4) type = "cool";
+            if (diff[a,2] == 5) type = "hot";
+
             viewObjList[diff[a,0],diff[a,1]].GetComponent<tileImg>().ImgChange(type,texture);
         }
     }
 
-    public void setView(int turn,int[,] map,Sprite[] tex)
+    public void SetView(string cName,string hName,int turn,int[,] map,Sprite[] tex)
     {
         texture = new Sprite[tex.Length];
         Array.Copy(tex,texture,tex.Length);
         ShowMap(map);
+        SetTurn(turn);
+        ShowName(cName,hName);
+    }
+
+    public void SetTurn(int turn)
+    {
+        turnText.text = turn.ToString();
+    }
+
+    void ShowName(string cName,string hName)
+    {
+        
     }
 
     void ShowMap(int[,] map)
@@ -68,15 +83,13 @@ public class viewManager : MonoBehaviour
 
         for (int y=0;y<yMax;y++)
         {
-            Debug.Log(y);
             for (int x=0;x<xMax;x++)
             {
                 GameObject prefab = Instantiate(tileObject);
                 prefab.transform.SetParent(gameObject.transform);
                 prefab.transform.localScale = new Vector3(xSize,ySize,0);
-                Debug.Log(x*xSize);
-                Debug.Log(y*ySize);
                 prefab.transform.localPosition = new Vector3(x*xSize,y*ySize,0);
+
                 string type;
                 type = "none";
                 if (map[yMax-1-y,x] == 2) type = "block";

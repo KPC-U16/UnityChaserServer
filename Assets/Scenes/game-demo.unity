@@ -213,6 +213,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tileObject: {fileID: 4445064752271836034, guid: e5e948cfa5bc30e4ea21e23f816fbf64, type: 3}
+  turnText: {fileID: 956752251}
 --- !u!1 &477515213
 GameObject:
   m_ObjectHideFlags: 0
