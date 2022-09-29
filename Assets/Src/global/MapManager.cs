@@ -2,11 +2,11 @@ using System;
 
 public class MapManager
 {
-    ChaserMap map = new ChaserMap(); //mapにChaserMap型をnewしてインスタンスを作る
-    int hotScore = 0; //ホットのスコアを持つ
-    int coolScore = 0; //クールのスコアを持つ
+    ChaserMap map; //mapにChaserMap型をnewしてインスタンスを作る
+    int hotScore; //ホットのスコアを持つ
+    int coolScore; //クールのスコアを持つ
     int[,] difference; //mapの直近のデータを持つ
-    bool isContinue = true; //ゲームの継続判定
+    bool isContinue; //ゲームの継続判定
     /*
     mapの数字の解説
     0:通路
@@ -18,6 +18,14 @@ public class MapManager
     6:壁に埋まったcool
     7:壁に埋まったhot
     */
+
+    public MapManager()
+    {
+        map = new ChaserMap();
+        hotScore = 0;
+        coolScore = 0;
+        isContinue = true;
+    }
 
     //mapのset系
     public async void setMap(string path) //mapファイルを用いてmapを生成するメソッド
