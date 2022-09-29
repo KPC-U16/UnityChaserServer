@@ -140,24 +140,13 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
         int[,] mapData = mapManager.getMapData();
         int turn = mapManager.getTurn();
         int item = mapManager.getItem();
-        string viewText = "";
-
-        for (int y=0;y < mapData.GetLength(0);y++)
-        {
-            for (int x=0;x < mapData.GetLength(1);x++)
-            {
-                viewText += mapData[y,x] + ",";
-            }
-            Debug.Log(viewText);
-            viewText = "";
-        }
 
         await Action(true);
     }
 
     void GameEnd()
     {
-
+        Debug.Log("game end");
     }
 
     async Task Action(bool isCool)
@@ -170,35 +159,26 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
         {
             if (!mapManager.getIsContinue()) GameEnd();
             team = isCool ? "Cool" : "Hot";
+            Debug.Log(mapManager.getTurn());
             
             switch (team)
             {
                 case "Cool":
                     Debug.Log(team);
                     recieve = await cool.Send("@"); //行動開始命令
-                    Debug.Log(recieve);
                     returnData = mapManager.ActChar(team,recieve);
-                    Debug.Log(string.Join(",",returnData));
                     recieve = await cool.Send(string.Join("",returnData));
-                    Debug.Log(recieve);
                     returnData = mapManager.ActChar(team,recieve);
-                    Debug.Log(string.Join(",",returnData));
                     recieve = await cool.Send(string.Join("",returnData));
-                    Debug.Log(recieve);
                     if (recieve == "#") Debug.Log("OK");
                     break;
                 case "Hot":
                     Debug.Log(team);
                     recieve = await hot.Send("@"); //行動開始命令
-                    Debug.Log(recieve);
                     returnData = mapManager.ActChar(team,recieve);
-                    Debug.Log(string.Join(",",returnData));
                     recieve = await hot.Send(string.Join("",returnData));
-                    Debug.Log(recieve);
                     returnData = mapManager.ActChar(team,recieve);
-                    Debug.Log(string.Join(",",returnData));
                     recieve = await hot.Send(string.Join("",returnData));
-                    Debug.Log(recieve);
                     if (recieve == "#") Debug.Log("OK");
                     break;
             }
