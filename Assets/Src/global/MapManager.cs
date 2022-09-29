@@ -114,13 +114,13 @@ public class MapManager
             //char(X,Y)に位置を代入する
             if(character.Equals("Cool"))
             {
-                charX = map.coolPosition[1];
-                charY = map.coolPosition[0];
+                charX = map.coolPosition[0];
+                charY = map.coolPosition[1];
             }
             else if(character.Equals("Hot"))
             {
-                charX = map.hotPosition[1];
-                charY = map.hotPosition[0];
+                charX = map.hotPosition[0];
+                charY = map.hotPosition[1];
             }
 
             values = AroundChar(charX, charY, character); //xとyの周辺情報を返す
@@ -202,7 +202,7 @@ public class MapManager
                 break;
         }
 
-        if(dCharX < 0 || dCharX >= map.size[1] || dCharY < 0 || dCharY >= map.size[0]) //画面外に出たかの判定
+        if(dCharX < 0 || dCharX >= map.size[0] || dCharY < 0 || dCharY >= map.size[1]) //画面外に出たかの判定
         {
             this.isContinue = false; //継続判定をfalseに
             this.difference = new int[1,3]{{charX, charY, 0}}; //差分情報の保存
@@ -217,6 +217,7 @@ public class MapManager
         else if(map.data[dCharY, dCharX] == 3) //もしアイテムのマスに進んだら
         {
             map.data[charY, charX] = 2; //もといたマスに壁を設置
+            map.data[dCharY, dCharX] = 0; //もといたマスを0(通路)に変更
             values = AroundChar(dCharX, dCharY, character); //壁になった周辺情報を取得
             score = true; //スコアの加算を有効化
             this.difference = new int[2,3]{{charX, charY, 2},{dCharX, dCharY, charNum}}; //差分情報の保存
