@@ -5,7 +5,7 @@ public class MapManager
     ChaserMap map = new ChaserMap(); //mapにChaserMap型をnewしてインスタンスを作る
     int hotScore = 0; //ホットのスコアを持つ
     int coolScore = 0; //クールのスコアを持つ
-    string[,] difference; //mapの直近のデータを持つ
+    int[,] difference; //mapの直近のデータを持つ
     bool isContinue = true; //ゲームの継続判定
     /*
     mapの数字の解説
@@ -20,16 +20,16 @@ public class MapManager
     */
 
     //mapのset系
-    public void setMap(string path) //mapファイルを用いてmapを生成するメソッド
+    public async void setMap(string path) //mapファイルを用いてmapを生成するメソッド
     {
-        map.setMap(path);
+        await map.setMap(path);
     }
 
-    public void setCustomMap(string path, int[] size) //マップ編集時に呼び出される
+    public async void setCustomMap(string path, int[] size) //マップ編集時に呼び出される
     {
-        if(path) //引数にpathを渡されたら.mapファイルを開いて展開する
+        if(!string.IsNullOrEmpty(path)) //引数にpathを渡されたら.mapファイルを開いて展開する
         {
-            map.setMap(path);
+            await map.setMap(path);
         }
         else //pathが渡されなかった場合sizeをもとにランダムマップを生成する
         {
@@ -39,10 +39,6 @@ public class MapManager
 
     public void setRandomMap(int[] size) //ランダムにmapを生成する
     {
-        if(!size) //sizeの値が与えられなかった場合
-        {
-            Array.Copy([15,17], size, 2); //デフォルト値として15×17マップを用いる
-        }
         Array.Copy(size, map.size, 2);
         map.data = new int[size[1], size[0]];
 
@@ -58,7 +54,7 @@ public class MapManager
         return returnData; //coolを4,hotを5にしたmapデータを送る
     }
 
-    public int[] getTurn() //ゲーム進行中のmapの残りターン数を返す
+    public int getTurn() //ゲーム進行中のmapの残りターン数を返す
     {
         return map.turn;
     }
@@ -73,7 +69,7 @@ public class MapManager
         return this.isContinue;
     }
 
-    public string[,] getDifference()
+    public int[,] getDifference()
     {
         return this.difference;
     }
@@ -84,6 +80,8 @@ public class MapManager
     {
         int[] values = new int[10]{0,0,0,0,0,0,0,0,0,0}; //デフォルトとしてゲームが継続できないときの情報で初期化する
         this.difference = null;
+        int charX = -1;
+        int charY = -1;
 
         if(!isContinue) return values; //相手が壁にはまっていたらゲーム終了
 
@@ -136,11 +134,11 @@ public class MapManager
                 {
                     values[n] = 0; //0を代入
                 }
-                else if(character.Equals("Hot") && charX + i == coolPosition[0] && charY + j == coolPosition[1])
+                else if(character.Equals("Hot") && charX + i == map.coolPosition[0] && charY + j == map.coolPosition[1])
                 {
                     values[n] = 1;
                 }
-                else if(character.Equals("Cool") && charX + i == hotPosition[0] && charY + j == hotPosition[1])
+                else if(character.Equals("Cool") && charX + i == map.hotPosition[0] && charY + j == map.hotPosition[1])
                 {
                     values[n] = 1;
                 }
@@ -156,9 +154,9 @@ public class MapManager
     private int[] WalkChar(string character, string direction) //walkのときのメソッド
     {
         int[] values = new int[10]{0,0,0,0,0,0,0,0,0,0}; //デフォルトとしてゲームが継続できないときの情報で初期化する
-        int charX;
-        int charY;
-        int charNum;
+        int charX = -1;
+        int charY = -1;
+        int charNum = -1; //おかしい数値に設定してるのでエラーを吸収してくれ
         bool score = false;
 
         //char(X,Y)に位置を代入する
@@ -242,8 +240,8 @@ public class MapManager
     private int[] LookChar(string character, string direction) //lookのときのメソッド
     {
         int[] values; //デフォルトとしてゲームが継続できないときの情報で初期化する
-        int charX;
-        int charY;
+        int charX = -1;
+        int charY = -1;
 
         //char(X,Y)に位置を代入する
         if(character.Equals("Cool"))
@@ -262,12 +260,16 @@ public class MapManager
         {
             case "r":
                 charX += 2;
+                break;
             case "l":
                 charX -= 2;
+                break;
             case "u":
                 charY -= 2;
+                break;
             case "d":
                 charY += 2;
+                break;
         }
 
         values = AroundChar(charX, charY, character);
@@ -280,9 +282,8 @@ public class MapManager
     private int[] SearchChar(string character, string direction) //searchのときのメソッド
     {
         int[] values = new int[10]{1,0,0,0,0,0,0,0,0,0}; //デフォルトとしてゲームが継続できないときの情報で初期化する
-        int charX;
-        int charY;
-        int charNum;
+        int charX = -1;
+        int charY = -1;
 
         //char(X,Y)に位置を代入する
         if(character.Equals("Cool"))
@@ -321,11 +322,11 @@ public class MapManager
             {
                 values[i] = 0;
             }
-            else if(character.Equals("Hot") && charX + (i * dCharX) == coolPosition[0] && charY + (i * dCharY)== coolPosition[1])
+            else if(character.Equals("Hot") && charX + (i * dCharX) == map.coolPosition[0] && charY + (i * dCharY)== map.coolPosition[1])
             {
                 values[i] = 1;
             }
-            else if(character.Equals("Cool") && charX + (i * dCharX) == hotPosition[0] && charY + (i * dCharY)== hotPosition[1])
+            else if(character.Equals("Cool") && charX + (i * dCharX) == map.hotPosition[0] && charY + (i * dCharY)== map.hotPosition[1])
             {
                 values[i] = 1;
             }
@@ -343,9 +344,9 @@ public class MapManager
     private int[] PutChar(string character, string direction) //putのときのメソッド
     {
         int[] values = new int[10]{0,0,0,0,0,0,0,0,0,0}; //デフォルトとしてゲームが継続できないときの情報で初期化する
-        int charX;
-        int charY;
-        int charNum;
+        int charX = -1;
+        int charY = -1;
+        int charNum = -1;
 
         //char(X,Y)に位置を代入する
         if(character.Equals("Cool"))
@@ -385,14 +386,14 @@ public class MapManager
             values = AroundChar(charX, charY, character); //xとyの周辺情報を返す
             this.difference = null;
         }
-        else if(dCharX == coolPosition[0] && dCharY == coolPosition[1])
+        else if(dCharX == map.coolPosition[0] && dCharY == map.coolPosition[1])
         {
             this.isContinue = false; //継続判定をfalseに
             map.data[dCharY, dCharX] = 2;
             values = AroundChar(charX, charY, character); //xとyの周辺情報を返す
             this.difference = new int[1,3]{{dCharX, dCharY, charNum + 2}}; //差分情報の保存
         }
-        else if(dCharX == hotPosition[0] && dCharY == hotPosition[1])
+        else if(dCharX == map.hotPosition[0] && dCharY == map.hotPosition[1])
         {
             this.isContinue = false; //継続判定をfalseに
             map.data[dCharY, dCharX] = 2;

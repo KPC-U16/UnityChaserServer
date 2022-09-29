@@ -36,15 +36,15 @@ public class ChaserMap
             }
             return "success";
         }
-        catch(FileNotFoundException e) //ファイルが開けなくて失敗したとき
+        catch(FileNotFoundException) //ファイルが開けなくて失敗したとき
         {
             return "Error: file read error";
         }
-        catch(IndexOutOfRangeException e) //マップのデータがサイズより大きかったとき
+        catch(IndexOutOfRangeException) //マップのデータがサイズより大きかったとき
         {
             return "Error: index out of range";
         }
-        catch(FormatException e) //ターンやサイズ,キャラクターの位置に数字以外が入っていたとき
+        catch(FormatException) //ターンやサイズ,キャラクターの位置に数字以外が入っていたとき
         {
             return "Error: file format error";
         }
