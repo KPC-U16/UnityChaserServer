@@ -170,14 +170,14 @@ public class MapManager
         //char(X,Y)に位置を代入する
         if(character.Equals("Cool"))
         {
-            charX = map.coolPosition[1];
-            charY = map.coolPosition[0];
+            charX = map.coolPosition[0];
+            charY = map.coolPosition[1];
             charNum = 4;
         }
         else if(character.Equals("Hot"))
         {
-            charX = map.hotPosition[1];
-            charY = map.hotPosition[0];
+            charX = map.hotPosition[0];
+            charY = map.hotPosition[1];
             charNum = 5;
         }
 
@@ -230,14 +230,14 @@ public class MapManager
         //char(X,Y)の位置をもとにchaserMap型に代入する
         if(character.Equals("Cool"))
         {
-            map.coolPosition[1] = dCharX;
-            map.coolPosition[0] = dCharY;
+            map.coolPosition[0] = dCharX;
+            map.coolPosition[1] = dCharY;
             if(score) this.coolScore++;
         }
         else if(character.Equals("Hot"))
         {
-            map.hotPosition[1] = dCharX;
-            map.hotPosition[0] = dCharY;
+            map.hotPosition[0] = dCharX;
+            map.hotPosition[1] = dCharY;
             if(score) this.hotScore++;
         }
 
@@ -254,13 +254,13 @@ public class MapManager
         //char(X,Y)に位置を代入する
         if(character.Equals("Cool"))
         {
-            charX = map.coolPosition[1];
-            charY = map.coolPosition[0];
+            charX = map.coolPosition[0];
+            charY = map.coolPosition[1];
         }
         else if(character.Equals("Hot"))
         {
-            charX = map.hotPosition[1];
-            charY = map.hotPosition[0];
+            charX = map.hotPosition[0];
+            charY = map.hotPosition[1];
         }
 
         //座標をずらしてgetReadyと同じことをする
@@ -296,13 +296,13 @@ public class MapManager
         //char(X,Y)に位置を代入する
         if(character.Equals("Cool"))
         {
-            charX = map.coolPosition[1];
-            charY = map.coolPosition[0];
+            charX = map.coolPosition[0];
+            charY = map.coolPosition[1];
         }
         else if(character.Equals("Hot"))
         {
-            charX = map.hotPosition[1];
-            charY = map.hotPosition[0];
+            charX = map.hotPosition[0];
+            charY = map.hotPosition[1];
         }
 
         int dCharX = 0;
@@ -324,9 +324,9 @@ public class MapManager
                 break;
         }
 
-        for(int i = 1; i <= 9; i++)
+        for(int i = 1; i < 10; i++)
         {
-            if(charX + (i * dCharX) < 0 || charX + (i * dCharX) > map.size[0] || charY + (i * dCharY) < 0 || charY + (i * dCharY) > map.size[1]) //mapの範囲外を見たとき
+            if(charX + (i * dCharX) < 0 || charX + (i * dCharX) >= map.size[0] || charY + (i * dCharY) < 0 || charY + (i * dCharY) >= map.size[1]) //mapの範囲外を見たとき
             {
                 values[i] = 2; //2(壁)を返す
             }
@@ -359,14 +359,14 @@ public class MapManager
         //char(X,Y)に位置を代入する
         if(character.Equals("Cool"))
         {
-            charX = map.coolPosition[1];
-            charY = map.coolPosition[0];
+            charX = map.coolPosition[0];
+            charY = map.coolPosition[1];
             charNum = 4;
         }
         else if(character.Equals("Hot"))
         {
-            charX = map.hotPosition[1];
-            charY = map.hotPosition[0];
+            charX = map.hotPosition[0];
+            charY = map.hotPosition[1];
             charNum = 5;
         }
 
