@@ -174,19 +174,31 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
             switch (team)
             {
                 case "Cool":
+                    Debug.Log(team);
                     recieve = await cool.Send("@"); //行動開始命令
+                    Debug.Log(recieve);
                     returnData = mapManager.ActChar(team,recieve);
+                    Debug.Log(string.Join(",",returnData));
                     recieve = await cool.Send(string.Join(",",returnData));
+                    Debug.Log(recieve);
                     returnData = mapManager.ActChar(team,recieve);
+                    Debug.Log(string.Join(",",returnData));
                     recieve = await cool.Send(string.Join(team,returnData));
+                    Debug.Log(recieve);
                     if (recieve == "#") Debug.Log("OK");
                     break;
                 case "Hot":
+                    Debug.Log(team);
                     recieve = await hot.Send("@"); //行動開始命令
+                    Debug.Log(recieve);
                     returnData = mapManager.ActChar(team,recieve);
+                    Debug.Log(string.Join(",",returnData));
                     recieve = await hot.Send(string.Join(",",returnData));
+                    Debug.Log(recieve);
                     returnData = mapManager.ActChar(team,recieve);
+                    Debug.Log(string.Join(",",returnData));
                     recieve = await hot.Send(string.Join(team,returnData));
+                    Debug.Log(recieve);
                     if (recieve == "#") Debug.Log("OK");
                     break;
             }

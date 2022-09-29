@@ -130,29 +130,32 @@ public class MapManager
 
     private int[] AroundChar(int charX, int charY, string character) //与えられた座標の周辺情報の取得
     {
-        int[] values = new int[10]{1,0,0,0,0,0,0,0,0,0}; //デフォルトとしてゲームが継続できないときの情報で初期化する
+        //int[] values = new int[10]{1,0,0,0,0,0,0,0,0,0}; //デフォルトとしてゲームが継続できないときの情報で初期化する
+        int[] values = new int[10]{1,1,1,1,1,1,1,1,1,1}; //デフォルトとしてゲームが継続できないときの情報で初期化する
         int n = 0; //2重for文の回った回数(valuesの番地)
 
         for(int i = -1; i < 2; i++)
         {
             for(int j = -1; j < 2; j++)
             {
-                n++;
-                if(charX + i < 0 || charX + i >= map.size[1] || charY + j < 0 || charY + j >= map.size[0]) //マップの範囲外を見たとき
+                n = n + 1;
+                if(charX + j < 0 || charX + j >= map.size[1] || charY + i < 0 || charY + i >= map.size[0]) //マップの範囲外を見たとき
                 {
-                    values[n] = 0; //0を代入
+                    //values[n] = 2; //2(壁)を代入
+                    values[n] = n + 5;
                 }
-                else if(character.Equals("Hot") && charX + i == map.coolPosition[0] && charY + j == map.coolPosition[1])
+                else if(character.Equals("Hot") && charX + j == map.coolPosition[0] && charY + i == map.coolPosition[1])
                 {
                     values[n] = 1;
                 }
-                else if(character.Equals("Cool") && charX + i == map.hotPosition[0] && charY + j == map.hotPosition[1])
+                else if(character.Equals("Cool") && charX + j == map.hotPosition[0] && charY + i == map.hotPosition[1])
                 {
                     values[n] = 1;
                 }
                 else
                 {
-                    values[n] = map.data[charX + i, charY + j]; //valuesにデータを代入
+                    //values[n] = map.data[charY + i, charX + j]; //valuesにデータを代入
+                    values[n] = n + 5;
                 }
             }
         }
@@ -326,9 +329,9 @@ public class MapManager
 
         for(int i = 1; i <= 9; i++)
         {
-            if(charX + (i * dCharX) < 0 || charX + (i * dCharX) >= map.size[1] || charY + (i * dCharY) < 0 || charY + (i * dCharY) >= map.size[0])
+            if(charX + (i * dCharX) < 0 || charX + (i * dCharX) > map.size[1] || charY + (i * dCharY) < 0 || charY + (i * dCharY) > map.size[0]) //mapの範囲外を見たとき
             {
-                values[i] = 0;
+                values[i] = 2; //2(壁)を返す
             }
             else if(character.Equals("Hot") && charX + (i * dCharX) == map.coolPosition[0] && charY + (i * dCharY)== map.coolPosition[1])
             {
