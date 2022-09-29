@@ -133,17 +133,62 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
         }
     }
 
-    public void GameStart(string mapPath)
+    public async void GameStart(string mapPath)
     {
+        mapManager = new MapManager();
         mapManager.setMap(mapPath);
         int[,] mapData = mapManager.getMapData();
+        int turn = mapManager.getTurn();
+        int item = mapManager.getItem();
+        string viewText = "";
 
         for (int y=0;y < mapData.GetLength(0);y++)
         {
             for (int x=0;x < mapData.GetLength(1);x++)
             {
-                Debug.Log(mapData[y,x]);
+                viewText += mapData[y,x] + ",";
             }
+            Debug.Log(viewText);
+            viewText = "";
         }
+
+        await Action(true);
+    }
+
+    void GameEnd()
+    {
+
+    }
+
+    async Task Action(bool isCool)
+    {
+        string recieve;
+        int[] returnData;
+        string team;
+
+        if (!mapManager.getIsContinue()) GameEnd();
+        team = isCool ? "Cool" : "Hot";
+        
+        switch (team)
+        {
+            case "Cool":
+                recieve = await cool.Send("@"); //行動開始命令
+                returnData = mapManager.ActChar(team,recieve);
+                recieve = await cool.Send(string.Join(",",returnData));
+                returnData = mapManager.ActChar(team,recieve);
+                recieve = await cool.Send(string.Join(team,returnData));
+                if (recieve == "#") Debug.Log("OK");
+                break;
+            case "Hot":
+                recieve = await hot.Send("@"); //行動開始命令
+                returnData = mapManager.ActChar(team,recieve);
+                recieve = await hot.Send(string.Join(",",returnData));
+                returnData = mapManager.ActChar(team,recieve);
+                recieve = await hot.Send(string.Join(team,returnData));
+                if (recieve == "#") Debug.Log("OK");
+                break;
+        }
+
+        await Action(!isCool);
     }
 }
