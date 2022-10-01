@@ -47,11 +47,67 @@ public class MapManager
 
     public void setRandomMap(int[] size) //ランダムにmapを生成する
     {
+        int[,] halfMap1;
+        int[,] halfMap2;
         Array.Copy(size, map.size, 2);
-        map.data = new int[size[1], size[0]];
+
+        halfMap1 = GenerateHalfMap((size[0] - 1) / 2, size[1]);
+        halfMap2 = GenerateHalfMap((1, size[1] - 1) / 2);
+        SynthesisMatrix(size, halfMap1, halfMap2);
+    }
+
+    private int[,] GenerateHalfMap(int MaxX, int MaxY)
+    {
+        int[,] halfMapData = new int[MaxY, MaxX];
+
+        for(int y; y < maxY; y++)
+        {
+            for(int x; x < MaxX; x++)
+            {
+
+            }
+        }
 
     }
 
+    private void SynthesisMatrix(int[] size, int[,] halfMap1, int[,] halfMap2)
+    {
+        int maxX = size[0];
+        int halfX = (size[0] - 1) / 2;
+        int centerX = maxX - halfX;
+        int centerY = (size[1] + 1) / 2;
+        int maxY = size[1];
+        map.data = new int[size[1], size[0]];
+
+        for(int y = 0; y < maxY; y++)
+        {
+            for(int x = 0; x < halfX; x++)
+            {
+                map.data[y, x] = halfMap1[y, x];
+            }
+        }
+
+        for(int y = 0; y < centerY - 1; y++)
+        {
+            map.data[y, centerX] = halfMap2[y, 0];
+        }
+
+        map.data[centerY, centerX] = 3;
+
+        for(int y = 1; y < centerY - 1; y++)
+        {
+            map.data[maxY - y, centerX] = halfMap2[y, 0];
+        }
+
+        for(int y = 0; y < maxY; y++)
+        {
+            for(int x = 0; x < halfX; x++)
+            {
+                map.data[y, maxX - x] = halfMap1[y, x];
+            }
+        }
+    }
+    
     //ゲッター系
 
     public int[,] getMapData() //mapのデータを返す
