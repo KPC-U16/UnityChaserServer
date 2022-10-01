@@ -171,10 +171,10 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
         string recieve;
         int[] returnData;
         string team;
+        int turn;
 
         while (true)
         {
-            if (!mapManager.getIsContinue()) GameEnd();
             team = isCool ? "Cool" : "Hot";
             Debug.Log(mapManager.getTurn());
             
@@ -202,7 +202,19 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
 
             await Task.Delay(500);
             viewManager.Act(mapManager.getDifference());
-            viewManager.SetTurn(mapManager.getTurn());
+            turn = mapManager.getTurn();
+            viewManager.SetTurn(turn);
+
+            if (turn == 0)
+            {
+                GameEnd();
+                break;
+            }
+            if (!mapManager.getIsContinue())
+            {
+                GameEnd();
+                break;
+            }
 
             isCool = !isCool;
         }
