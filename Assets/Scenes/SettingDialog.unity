@@ -694,6 +694,8 @@ MonoBehaviour:
       m_Image: {fileID: 0}
     - m_Text: yugu
       m_Image: {fileID: 0}
+    - m_Text: animation
+      m_Image: {fileID: 0}
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
@@ -763,10 +765,22 @@ MonoBehaviour:
   gameManager: {fileID: 446122669}
   yugu:
   - {fileID: 0}
-  - {fileID: 21300000, guid: aa0693ed5f98e48448636f285cd0fbb9, type: 3}
-  - {fileID: 21300000, guid: bb79c8aa6fecd614bb950509c239d358, type: 3}
-  - {fileID: 21300000, guid: 26432818c2bbda04da49b708e1f8b978, type: 3}
-  - {fileID: 21300000, guid: b035419b29c313c45ac9c415d872b713, type: 3}
+  - {fileID: 21300000, guid: 65faa9e108e33694faf6b0846e0d4891, type: 3}
+  - {fileID: 21300000, guid: 8da0218ede420624196bbf2b10045bf2, type: 3}
+  - {fileID: 21300000, guid: da86e3793b546494fbf46705acc90bac, type: 3}
+  - {fileID: 21300000, guid: d5f16128fe6ef5442812882b3bd93f96, type: 3}
+  anim:
+  - {fileID: 0}
+  - {fileID: -565357579, guid: a0d50f6a259cd8a4ea85bdabace987a8, type: 3}
+  - {fileID: 21300000, guid: 8da0218ede420624196bbf2b10045bf2, type: 3}
+  - {fileID: 21300000, guid: c26eb83ce83162848b5a5f9ff649b0c2, type: 3}
+  - {fileID: 21300000, guid: 20f40d044610c0646bd451c1dee71be7, type: 3}
+  animator:
+  - {fileID: 0}
+  - {fileID: 9100000, guid: ab599fa1021ca9141bbe142e305b0de3, type: 2}
+  - {fileID: 0}
+  - {fileID: 9100000, guid: d44d5ee12a3791948b704dec11cd04f2, type: 2}
+  - {fileID: 9100000, guid: 9709479f441f09b499327d270e94146f, type: 2}
 --- !u!1 &259200829
 GameObject:
   m_ObjectHideFlags: 0
@@ -2012,6 +2026,7 @@ MonoBehaviour:
   hotConButton: {fileID: 492759517}
   startButton: {fileID: 987870604}
   texture: []
+  animators: []
 --- !u!4 &446122670
 Transform:
   m_ObjectHideFlags: 0

@@ -7,6 +7,8 @@ using UnityEngine.UI;
 public class tileImg : MonoBehaviour
 {
     Image m_image;
+    Animator animator;
+    bool animatoin = false;
 
     // Start is called before the first frame update
     void Start()
@@ -31,6 +33,11 @@ public class tileImg : MonoBehaviour
                 break;
             case "block":
                 m_image.sprite = texture[1];
+                if (animatoin)
+                {
+                    animator.SetTrigger("BlockGen");
+                    Debug.Log("animation");
+                }
                 break;
             case "item":
                 m_image.sprite = texture[2];
@@ -42,5 +49,12 @@ public class tileImg : MonoBehaviour
                 m_image.sprite = texture[4];
                 break;
         }
+    }
+
+    public void SetAnimator(RuntimeAnimatorController[] animators)
+    {
+        animator = GetComponent<Animator>();
+        animator.runtimeAnimatorController = animators[1];
+        animatoin = true;
     }
 }

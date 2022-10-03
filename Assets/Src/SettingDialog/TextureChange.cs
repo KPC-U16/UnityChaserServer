@@ -10,6 +10,8 @@ public class TextureChange : MonoBehaviour
     public GameManager gameManager;
 
     public Sprite[] yugu;
+    public Sprite[] anim;
+    public RuntimeAnimatorController[] animator;
     // Start is called before the first frame update
     void Start()
     {
@@ -26,7 +28,11 @@ public class TextureChange : MonoBehaviour
     {
         if (text.text == "yugu")
         {
-            gameManager.SetTexture(yugu);
+            gameManager.SetTexture(yugu,null);
+        }
+        if (text.text == "animation")
+        {
+            gameManager.SetTexture(anim,animator);
         }
     }
 }

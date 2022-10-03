@@ -11,7 +11,11 @@ public class viewManager : MonoBehaviour
     public Text turnText = null;
     GameObject[,] viewObjList;
 
+    GameObject cool;
+    GameObject hot;
+
     Sprite[] texture;
+    RuntimeAnimatorController[] animators;
 
     // Start is called before the first frame update
     void Start()
@@ -32,20 +36,31 @@ public class viewManager : MonoBehaviour
         for (int a=0;a<diff.GetLength(0);a++)
         {
             string type;
+
             type = "none";
             if (diff[a,2] == 2) type = "block";
-            if (diff[a,2] == 3) type = "item";
-            if (diff[a,2] == 4) type = "cool";
-            if (diff[a,2] == 5) type = "hot";
+            if (diff[a,2] == 4) 
+            {
+                //coolの移動関数を呼ぶ
+            }
+            if (diff[a,2] == 5)
+            {
+                //hotの移動関数を呼ぶ
+            }
 
             viewObjList[diff[a,0],diff[a,1]].GetComponent<tileImg>().ImgChange(type,texture);
         }
     }
 
-    public void SetView(string cName,string hName,int turn,int[,] map,Sprite[] tex)
+    public void SetView(string cName,string hName,int turn,int[,] map,Sprite[] tex,RuntimeAnimatorController[] anim)
     {
         texture = new Sprite[tex.Length];
         Array.Copy(tex,texture,tex.Length);
+        if (anim != null)
+        {
+            animators = new RuntimeAnimatorController[anim.Length];
+            Array.Copy(anim,animators,anim.Length);
+        }
         ShowMap(map);
         SetTurn(turn);
         ShowName(cName,hName);
@@ -63,6 +78,9 @@ public class viewManager : MonoBehaviour
 
     void ShowMap(int[,] map)
     {
+        int[] coolPos = new int[2];
+        int[] hotPos = new int[2];
+
         int yMax = map.GetLength(0);
         int xMax = map.GetLength(1);
 
@@ -94,14 +112,26 @@ public class viewManager : MonoBehaviour
                 type = "none";
                 if (map[yMax-1-y,x] == 2) type = "block";
                 if (map[yMax-1-y,x] == 3) type = "item";
-                if (map[yMax-1-y,x] == 4) type = "cool";
-                if (map[yMax-1-y,x] == 5) type = "hot";
-                prefab.GetComponent<tileImg>().ImgChange(type,texture);
+                if (map[yMax-1-y,x] == 4)
+                {
+                    coolPos[0] = x;
+                    coolPos[1] = yMax-1-y;
+                }
+                if (map[yMax-1-y,x] == 5)
+                {
+                    hotPos[0] = x;
+                    hotPos[1] = yMax-1-y;
+                }
+                tileImg tile = prefab.GetComponent<tileImg>();
+                tile.SetAnimator(animators);
+                tile.ImgChange(type,texture);
                 int xBuf = x;
                 int yBuf = y;
 
                 viewObjList[x,yMax-1-y] = prefab;
             }
         }
+
+        //cool,hotを生成しposの位置のオブジェクトの子にする
     }
 }
