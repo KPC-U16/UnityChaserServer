@@ -765,14 +765,14 @@ MonoBehaviour:
   gameManager: {fileID: 446122669}
   yugu:
   - {fileID: 0}
-  - {fileID: 21300000, guid: 65faa9e108e33694faf6b0846e0d4891, type: 3}
-  - {fileID: 21300000, guid: 8da0218ede420624196bbf2b10045bf2, type: 3}
-  - {fileID: 21300000, guid: da86e3793b546494fbf46705acc90bac, type: 3}
-  - {fileID: 21300000, guid: d5f16128fe6ef5442812882b3bd93f96, type: 3}
+  - {fileID: 21300000, guid: bfb19dc01116ea542822f3f40c282fff, type: 3}
+  - {fileID: 21300000, guid: 37a030014544614418b934b006d998aa, type: 3}
+  - {fileID: 21300000, guid: 3fda2eb5b44124d47b9386f0a5be8349, type: 3}
+  - {fileID: 21300000, guid: 0e73cfc23873a8a4aba22222fb12103e, type: 3}
   anim:
   - {fileID: 0}
   - {fileID: -565357579, guid: a0d50f6a259cd8a4ea85bdabace987a8, type: 3}
-  - {fileID: 21300000, guid: 8da0218ede420624196bbf2b10045bf2, type: 3}
+  - {fileID: 21300000, guid: 37a030014544614418b934b006d998aa, type: 3}
   - {fileID: 21300000, guid: c26eb83ce83162848b5a5f9ff649b0c2, type: 3}
   - {fileID: 21300000, guid: 20f40d044610c0646bd451c1dee71be7, type: 3}
   animator:

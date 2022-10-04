@@ -15,7 +15,7 @@ public class viewManager : MonoBehaviour
     GameObject hot;
 
     Sprite[] texture;
-    RuntimeAnimatorController[] animators;
+    RuntimeAnimatorController[] animators = null;
 
     // Start is called before the first frame update
     void Start()
@@ -48,7 +48,7 @@ public class viewManager : MonoBehaviour
                 //hotの移動関数を呼ぶ
             }
 
-            viewObjList[diff[a,0],diff[a,1]].GetComponent<tileImg>().ImgChange(type,texture);
+            viewObjList[diff[a,0],diff[a,1]].GetComponent<tileImg>().ImgChange(type);
         }
     }
 
@@ -123,8 +123,7 @@ public class viewManager : MonoBehaviour
                     hotPos[1] = yMax-1-y;
                 }
                 tileImg tile = prefab.GetComponent<tileImg>();
-                tile.SetAnimator(animators);
-                tile.ImgChange(type,texture);
+                tile.SetView(type,texture,animators);
                 int xBuf = x;
                 int yBuf = y;
 

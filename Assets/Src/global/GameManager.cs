@@ -71,6 +71,10 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
             animators = new RuntimeAnimatorController[anim.Length];
             Array.Copy(anim,animators,anim.Length);
         }
+        else
+        {
+            animators = null;
+        }
     }
 
     public async void ConWait(string team,string port)
