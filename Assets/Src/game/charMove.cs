@@ -15,4 +15,9 @@ public class charMove : MonoBehaviour
     {
         
     }
+
+    public void SetView()
+    {
+
+    }
 }

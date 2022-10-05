@@ -9,19 +9,23 @@ public class tileImg : MonoBehaviour
 {
     SpriteRenderer m_image;
     Animator animator;
+    RuntimeAnimatorController controllers;
     Sprite[] texture;
     bool animatoin = false;
 
     // Start is called before the first frame update
     void Start()
     {
-
     }
 
     // Update is called once per frame
     void Update()
     {
         
+    }
+
+    void LateUpdate()
+    {
     }
 
     public void ImgChange(string type)
@@ -39,22 +43,19 @@ public class tileImg : MonoBehaviour
                 m_image.size = new Vector2(1,1);
                 if (animatoin)
                 {
+                    animator.runtimeAnimatorController = controllers;
                     animator.SetTrigger("BlockGen");
                 }
-                break;
-            case "item":
-                m_image.sprite = texture[2];
-                m_image.size = new Vector2(1,1);
                 break;
         }
     }
 
     public void SetView(string type,Sprite[] tex,RuntimeAnimatorController[] animators)
     {
+        m_image = GetComponent<SpriteRenderer>();
+
         texture = new Sprite[tex.Length];
         Array.Copy(tex,texture,tex.Length);
-
-        m_image = GetComponent<SpriteRenderer>();
 
         switch (type)
         {
@@ -74,13 +75,14 @@ public class tileImg : MonoBehaviour
 
         if (animators != null)
         {
-            animator = GetComponent<Animator>();
-            animator.runtimeAnimatorController = animators[1];
+            controllers = animators[1];
             animatoin = true;
+            animator = GetComponent<Animator>();
         }
 
         if (animatoin && type == "block")
         {
+            animator.runtimeAnimatorController = controllers;
             animator.SetTrigger("BlockGen");
         }
     }
