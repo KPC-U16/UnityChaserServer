@@ -24,6 +24,7 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
     viewManager viewManager;
 
     public Sprite[] texture;
+    public RuntimeAnimatorController[] animators = null;
 
 
     private bool gameStarted = false;
@@ -56,20 +57,29 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
         if (nextScene.name == "game-demo")
         {
             viewManager = GameObject.Find("BoardBack").GetComponent<viewManager>();
-            viewManager.SetView(cool.name,hot.name,mapManager.getTurn(),mapManager.getMapData(),texture);
+            viewManager.SetView(cool.name,hot.name,mapManager.getTurn(),mapManager.getMapData(),texture,animators);
             await Action(true);
         }
     }
 
-    public void SetTexture(Sprite[] tex)
+    public void SetTexture(Sprite[] tex,RuntimeAnimatorController[] anim)
     {
         texture = new Sprite[tex.Length];
         Array.Copy(tex,texture,tex.Length);
+        if (anim != null)
+        {
+            animators = new RuntimeAnimatorController[anim.Length];
+            Array.Copy(anim,animators,anim.Length);
+        }
+        else
+        {
+            animators = null;
+        }
     }
 
     public async void ConWait(string team,string port)
     {
-        bool success;
+        bool success = false;
         Debug.Log(team);
         Debug.Log(port);
 
@@ -97,6 +107,7 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
             break;
         }
 
+        Debug.Log(success);
         StartCoroutine(CheckConnected(team));
     }
 

@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 34520eea70d6e204d8f175b91f8715fc
+guid: b618e787314fd1f43aba70d250187bef
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -129,11 +129,11 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: cool_death_0
+      name: item_0
       rect:
         serializedVersion: 2
-        x: 2
-        y: 2
+        x: 4
+        y: 0
         width: 128
         height: 128
       alignment: 6
@@ -143,18 +143,18 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: d73893b2c4ce9cf4a8ef666bed0e255e
-      internalID: -965414527
+      spriteID: 23a7c4a53e2ee8947ae81e9f019cbe99
+      internalID: -1247409958
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: cool_death_1
+      name: item_1
       rect:
         serializedVersion: 2
         x: 134
-        y: 2
+        y: 0
         width: 128
         height: 128
       alignment: 6
@@ -164,8 +164,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 76fca5df12f59fd4a817b5251fa77c9d
-      internalID: -180142967
+      spriteID: a09441ff5b328e343a8f2030bc8e7e46
+      internalID: 1907345155
       vertices: []
       indices: 
       edges: []
@@ -181,8 +181,8 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      cool_death_0: -965414527
-      cool_death_1: -180142967
+      item_0: -1247409958
+      item_1: 1907345155
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0
