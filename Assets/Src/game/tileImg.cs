@@ -42,7 +42,6 @@ public class tileImg : MonoBehaviour
                 else
                 {
                     m_image.sprite = texture[0];
-                    m_image.size = new Vector2(1,1);
                 }
                 break;
             case "block":
@@ -53,7 +52,6 @@ public class tileImg : MonoBehaviour
                 else
                 {
                     m_image.sprite = texture[1];
-                    m_image.size = new Vector2(1,1);
                 }
                 break;
             case "item":
@@ -64,7 +62,6 @@ public class tileImg : MonoBehaviour
                 else
                 {
                     m_image.sprite = texture[2];
-                    m_image.size = new Vector2(1,1);
                 }
                 break;
         }

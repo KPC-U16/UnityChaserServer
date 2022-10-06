@@ -8,11 +8,15 @@ using UnityEngine.UI;
 public class viewManager : MonoBehaviour
 {
     public GameObject tileObject = null;
+    public GameObject characterObject = null;
     public Text turnText = null;
     GameObject[,] viewObjList;
 
     GameObject cool;
     GameObject hot;
+
+    charMove coolSrc;
+    charMove hotSrc;
 
     Sprite[] texture;
     RuntimeAnimatorController[] animators = null;
@@ -29,7 +33,7 @@ public class viewManager : MonoBehaviour
         
     }
 
-    public void Act(int[,] diff)
+    public void Act(int[,] diff,string command)
     {
         if (diff == null) return;
 
@@ -41,11 +45,17 @@ public class viewManager : MonoBehaviour
             if (diff[a,2] == 2) type = "block";
             if (diff[a,2] == 4) 
             {
-                //coolの移動関数を呼ぶ
+                //coolの移動モーション関数を呼ぶ
+                coolSrc.Act(command);
+                cool.transform.SetParent(viewObjList[diff[a,0],diff[a,1]].transform);
+                cool.transform.localPosition = new Vector3(0,0,0);
             }
             if (diff[a,2] == 5)
             {
-                //hotの移動関数を呼ぶ
+                //hotの移動モーション関数を呼ぶ
+                hotSrc.Act(command);
+                hot.transform.SetParent(viewObjList[diff[a,0],diff[a,1]].transform);
+                hot.transform.localPosition = new Vector3(0,0,0);
             }
 
             viewObjList[diff[a,0],diff[a,1]].GetComponent<tileImg>().ImgChange(type);
@@ -133,5 +143,18 @@ public class viewManager : MonoBehaviour
         }
 
         //cool,hotを生成しposの位置のオブジェクトの子にする
+        cool = Instantiate(characterObject);
+        cool.transform.SetParent(viewObjList[coolPos[0],coolPos[1]].transform);
+        cool.transform.localScale = new Vector3(1,1,0);
+        cool.transform.localPosition = new Vector3(0,0,0);
+        coolSrc = cool.GetComponent<charMove>();
+        coolSrc.Set(texture[3],animators[1],xSize,ySize);
+
+        hot = Instantiate(characterObject);
+        hot.transform.SetParent(viewObjList[hotPos[0],hotPos[1]].transform);
+        hot.transform.localScale = new Vector3(1,1,0);
+        hot.transform.localPosition = new Vector3(0,0,0);
+        hotSrc = hot.GetComponent<charMove>();
+        hotSrc.Set(texture[4],animators[2],xSize,ySize);
     }
 }
