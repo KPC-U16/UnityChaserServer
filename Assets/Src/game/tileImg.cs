@@ -9,7 +9,6 @@ public class tileImg : MonoBehaviour
 {
     SpriteRenderer m_image;
     Animator animator;
-    RuntimeAnimatorController controllers;
     Sprite[] texture;
     bool animatoin = false;
 
@@ -26,6 +25,7 @@ public class tileImg : MonoBehaviour
 
     void LateUpdate()
     {
+        m_image.size = new Vector2(1,1);
     }
 
     public void ImgChange(string type)
@@ -35,55 +35,53 @@ public class tileImg : MonoBehaviour
         switch (type)
         {
             case "none":
-                m_image.sprite = texture[0];
-                m_image.size = new Vector2(1,1);
-                break;
-            case "block":
-                m_image.sprite = texture[1];
-                m_image.size = new Vector2(1,1);
                 if (animatoin)
                 {
-                    animator.runtimeAnimatorController = controllers;
+                    animator.SetBool("isItem",false);
+                }
+                else
+                {
+                    m_image.sprite = texture[0];
+                    m_image.size = new Vector2(1,1);
+                }
+                break;
+            case "block":
+                if (animatoin)
+                {
                     animator.SetTrigger("BlockGen");
+                }
+                else
+                {
+                    m_image.sprite = texture[1];
+                    m_image.size = new Vector2(1,1);
+                }
+                break;
+            case "item":
+                if (animatoin)
+                {
+                    animator.SetBool("isItem",true);
+                }
+                else
+                {
+                    m_image.sprite = texture[2];
+                    m_image.size = new Vector2(1,1);
                 }
                 break;
         }
     }
 
-    public void SetView(string type,Sprite[] tex,RuntimeAnimatorController[] animators)
+    public void SetView(RuntimeAnimatorController[] animators,Sprite[] tex)
     {
-        m_image = GetComponent<SpriteRenderer>();
-
-        texture = new Sprite[tex.Length];
-        Array.Copy(tex,texture,tex.Length);
-
-        switch (type)
+        if (animators == null)
         {
-            case "none":
-                m_image.sprite = texture[0];
-                m_image.size = new Vector2(1,1);
-                break;
-            case "block":
-                m_image.sprite = texture[1];
-                m_image.size = new Vector2(1,1);
-                break;
-            case "item":
-                m_image.sprite = texture[2];
-                m_image.size = new Vector2(1,1);
-                break;
+            texture = new Sprite[tex.Length];
+            Array.Copy(tex,texture,tex.Length);
         }
-
-        if (animators != null)
+        else
         {
-            controllers = animators[1];
-            animatoin = true;
             animator = GetComponent<Animator>();
-        }
-
-        if (animatoin && type == "block")
-        {
-            animator.runtimeAnimatorController = controllers;
-            animator.SetTrigger("BlockGen");
+            animator.runtimeAnimatorController = animators[0];
+            animatoin = true;
         }
     }
 }

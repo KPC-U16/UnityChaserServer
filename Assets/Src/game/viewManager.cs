@@ -123,7 +123,8 @@ public class viewManager : MonoBehaviour
                     hotPos[1] = yMax-1-y;
                 }
                 tileImg tile = prefab.GetComponent<tileImg>();
-                tile.SetView(type,texture,animators);
+                tile.SetView(animators,texture);
+                tile.ImgChange(type);
                 int xBuf = x;
                 int yBuf = y;
 

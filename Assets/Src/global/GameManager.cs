@@ -79,7 +79,7 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
 
     public async void ConWait(string team,string port)
     {
-        bool success;
+        bool success = false;
         Debug.Log(team);
         Debug.Log(port);
 
@@ -107,6 +107,7 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
             break;
         }
 
+        Debug.Log(success);
         StartCoroutine(CheckConnected(team));
     }
 
