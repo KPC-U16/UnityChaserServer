@@ -197,6 +197,7 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
                     returnData = mapManager.ActChar(team,recieve);
                     recieve = await cool.Send(string.Join("",returnData));
                     returnData = mapManager.ActChar(team,recieve);
+                    viewManager.Act(mapManager.getDifference(),recieve);
                     recieve = await cool.Send(string.Join("",returnData));
                     if (recieve == "#\r\n") Debug.Log("OK");
                     break;
@@ -206,13 +207,13 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
                     returnData = mapManager.ActChar(team,recieve);
                     recieve = await hot.Send(string.Join("",returnData));
                     returnData = mapManager.ActChar(team,recieve);
+                    viewManager.Act(mapManager.getDifference(),recieve);
                     recieve = await hot.Send(string.Join("",returnData));
                     if (recieve == "#\r\n") Debug.Log("OK");
                     break;
             }
 
             await Task.Delay(500);
-            viewManager.Act(mapManager.getDifference());
             turn = mapManager.getTurn();
             viewManager.SetTurn(turn);
 
